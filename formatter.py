@@ -168,6 +168,38 @@ def format_report_html(report: WeatherReport) -> str:
     """.strip()
 
 
+def format_report_whatsapp(report: WeatherReport) -> str:
+    """Short plain-text summary suitable for WhatsApp."""
+    lines = [
+        f"Weather digest — {datetime.now().strftime('%d %b %Y')}",
+        "",
+    ]
+    for city in report.cities:
+        if city.error:
+            lines.append(f"{city.city_name}: error — {city.error}")
+            continue
+        current = city.current
+        if current:
+            lines.append(
+                f"{city.city_name}: {current.weather_description}, "
+                f"{_format_number(current.temperature_c, '°C')} "
+                f"(feels {_format_number(current.apparent_temperature_c, '°C')}), "
+                f"humidity {_format_number(current.humidity_percent, '%')}"
+            )
+        else:
+            lines.append(f"{city.city_name}: no current data")
+        if city.daily:
+            today = city.daily[0]
+            lines.append(
+                f"  Today: {_format_number(today.temp_min_c, '°C')}–"
+                f"{_format_number(today.temp_max_c, '°C')}, "
+                f"rain {_format_number(today.precipitation_sum_mm, ' mm')}"
+            )
+        lines.append("")
+    lines.append(OPEN_METEO_ATTRIBUTION)
+    return "\n".join(lines).strip()
+
+
 def format_report_markdown(report: WeatherReport) -> str:
     lines = [
         "# Daily Weather Digest",

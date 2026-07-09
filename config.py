@@ -112,6 +112,23 @@ def should_send_live_email() -> bool:
     return get_env("SEND_LIVE_EMAIL", "0") == "1"
 
 
+def get_whatsapp_phone() -> str:
+    """Return phone in international format without + (default: India 9604423793)."""
+    raw = get_env("WHATSAPP_PHONE", "919604423793") or "919604423793"
+    digits = "".join(ch for ch in raw if ch.isdigit())
+    if len(digits) == 10:
+        digits = f"91{digits}"
+    return digits
+
+
+def get_whatsapp_api_key() -> str:
+    return required_env("WHATSAPP_APIKEY")
+
+
+def is_whatsapp_enabled() -> bool:
+    return bool(get_env("WHATSAPP_APIKEY"))
+
+
 def ensure_log_dir() -> Path:
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     return LOG_DIR

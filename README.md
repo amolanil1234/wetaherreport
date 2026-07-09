@@ -5,6 +5,7 @@ Daily weather digest for **Delhi**, **Mumbai**, and **Nagpur** using [Open-Meteo
 Includes:
 - **MCP server** (`server.py`) — on-demand weather tools in Cursor
 - **Scheduler script** (`send_daily_digest.py`) — for Windows Task Scheduler or cloud cron
+- **WhatsApp** — short digest to your phone via CallMeBot (optional)
 
 **Team documentation:** See [DESIGN.md](DESIGN.md) for architecture, classes, APIs, and data flow.
 
@@ -46,6 +47,20 @@ TO_EMAIL=amol.eng@gmail.com
 ```
 
 SendGrid requires a verified sender at [SendGrid Sender Authentication](https://app.sendgrid.com/settings/sender_auth).
+
+### WhatsApp (CallMeBot)
+
+1. On WhatsApp, open a chat with **+34 644 66 26 75**
+2. Send exactly: `I allow callmebot to send me messages`
+3. Save the `apikey` they reply with
+4. Put in `.env`:
+
+```env
+WHATSAPP_PHONE=919604423793
+WHATSAPP_APIKEY=your_apikey_here
+```
+
+Also add `WHATSAPP_APIKEY` as a GitHub Actions repository secret for cloud runs.
 
 ### 3. Register MCP in Cursor
 
