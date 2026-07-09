@@ -5,8 +5,7 @@ Daily weather digest for **Delhi** and **Nagpur** using [Open-Meteo](https://ope
 Includes:
 - **MCP server** (`server.py`) — on-demand weather tools in Cursor
 - **Scheduler script** (`send_daily_digest.py`) — for Windows Task Scheduler or cloud cron
-- **WhatsApp** — short digest to your phone via CallMeBot (optional)
-- **James Clear quotes** — pulls “3 Ideas From Me” from your `3-2-1:` emails into a local DB and uses them in the digest
+- **James Clear quotes** — syncs 3-2-1 ideas/quotes/questions into a local DB every Friday
 
 **Team documentation:** See [DESIGN.md](DESIGN.md) for architecture, classes, APIs, and data flow.
 
@@ -48,21 +47,6 @@ TO_EMAIL=amol.eng@gmail.com
 ```
 
 SendGrid requires a verified sender at [SendGrid Sender Authentication](https://app.sendgrid.com/settings/sender_auth).
-
-### WhatsApp (CallMeBot)
-
-1. Add bot phone **+34 644 53 78 49** as a contact (country **Spain / ES +34**)
-2. Open that contact in WhatsApp (not just “New contact” — save it first)
-3. Send exactly: `I allow callmebot to send me messages`
-4. Wait for reply with your `apikey` (can take up to ~2 minutes)
-5. Put in `.env`:
-
-```env
-WHATSAPP_PHONE=919604423793
-WHATSAPP_APIKEY=your_apikey_here
-```
-
-Also add `WHATSAPP_APIKEY` as a GitHub Actions repository secret for cloud runs.
 
 ### James Clear 3-2-1 quotes
 

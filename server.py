@@ -33,11 +33,10 @@ import traceback
 
 from mcp.server.fastmcp import FastMCP
 
-from config import DEFAULT_CITIES, CityConfig, get_digest_timezone, is_whatsapp_enabled
+from config import DEFAULT_CITIES, CityConfig, get_digest_timezone
 from emailer import send_weather_email
 from formatter import format_report_markdown
 from weather import build_weather_report, fetch_city_weather
-from whatsapp import send_weather_whatsapp
 
 mcp = FastMCP("Weather Email")
 
@@ -62,8 +61,8 @@ def get_weather_report() -> str:
 @mcp.tool()
 def send_weather_email_now() -> str:
     """
-    Fetch weather for Delhi and Nagpur and send email + WhatsApp immediately.
-    Email needs SMTP/SendGrid in .env. WhatsApp needs WHATSAPP_APIKEY (CallMeBot).
+    Fetch weather for Delhi and Nagpur and send the digest email immediately.
+    Requires SMTP/SendGrid configured in .env.
     """
     try:
         report = build_weather_report(DEFAULT_CITIES, get_digest_timezone())
@@ -78,13 +77,6 @@ def send_weather_email_now() -> str:
             lines.append(f"- Email: {send_weather_email(report)}")
         except Exception as email_exc:
             lines.append(f"- Email: FAILED — {email_exc}")
-        if is_whatsapp_enabled():
-            try:
-                lines.append(f"- WhatsApp: {send_weather_whatsapp(report)}")
-            except Exception as wa_exc:
-                lines.append(f"- WhatsApp: FAILED — {wa_exc}")
-        else:
-            lines.append("- WhatsApp: skipped (set WHATSAPP_APIKEY to enable)")
         lines.append("")
         lines.append(format_report_markdown(report))
         return "\n".join(lines)

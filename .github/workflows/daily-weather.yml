@@ -31,16 +31,11 @@ jobs:
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           FROM_EMAIL: ${{ secrets.FROM_EMAIL || 'amol.eng@gmail.com' }}
           TO_EMAIL: ${{ secrets.TO_EMAIL || 'amol.eng@gmail.com' }}
-          WHATSAPP_PHONE: ${{ secrets.WHATSAPP_PHONE || '919604423793' }}
-          WHATSAPP_APIKEY: ${{ secrets.WHATSAPP_APIKEY }}
           DIGEST_TIMEZONE: Asia/Kolkata
         run: |
           if [ -z "$SMTP_PASS" ]; then
             echo "ERROR: Repository secret SMTP_PASS is missing or empty."
             echo "Add it at: Settings → Secrets and variables → Actions"
             exit 1
-          fi
-          if [ -z "$WHATSAPP_APIKEY" ]; then
-            echo "WARNING: WHATSAPP_APIKEY secret is empty — WhatsApp will be skipped."
           fi
           python send_daily_digest.py
