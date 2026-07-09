@@ -22,14 +22,20 @@ jobs:
 
       - name: Send daily weather digest
         env:
-          # Defaults work for Gmail; override via secrets if needed
-          EMAIL_PROVIDER: ${{ secrets.EMAIL_PROVIDER || 'gmail' }}
-          SMTP_HOST: ${{ secrets.SMTP_HOST || 'smtp.gmail.com' }}
-          SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
-          SMTP_SECURE: ${{ secrets.SMTP_SECURE || 'false' }}
-          SMTP_USER: ${{ secrets.SMTP_USER }}
+          EMAIL_PROVIDER: gmail
+          SMTP_HOST: smtp.gmail.com
+          SMTP_PORT: "587"
+          SMTP_SECURE: "false"
+          # Only SMTP_PASS must be a secret; email addresses are fixed for this project
+          SMTP_USER: ${{ secrets.SMTP_USER || 'amol.eng@gmail.com' }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
-          FROM_EMAIL: ${{ secrets.FROM_EMAIL || secrets.SMTP_USER }}
+          FROM_EMAIL: ${{ secrets.FROM_EMAIL || 'amol.eng@gmail.com' }}
           TO_EMAIL: ${{ secrets.TO_EMAIL || 'amol.eng@gmail.com' }}
           DIGEST_TIMEZONE: Asia/Kolkata
-        run: python send_daily_digest.py
+        run: |
+          if [ -z "$SMTP_PASS" ]; then
+            echo "ERROR: Repository secret SMTP_PASS is missing or empty."
+            echo "Add it at: Settings → Secrets and variables → Actions"
+            exit 1
+          fi
+          python send_daily_digest.py
