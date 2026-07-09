@@ -6,6 +6,7 @@ import httpx
 
 from config import get_whatsapp_api_key, get_whatsapp_phone, is_whatsapp_enabled
 from formatter import format_report_whatsapp
+from quotes import fetch_live_quote
 from weather import WeatherReport
 
 CALLMEBOT_URL = "https://api.callmebot.com/whatsapp.php"
@@ -22,7 +23,7 @@ def send_weather_whatsapp(report: WeatherReport) -> str:
 
     phone = get_whatsapp_phone()
     apikey = get_whatsapp_api_key()
-    text = format_report_whatsapp(report)
+    text = format_report_whatsapp(report, fetch_live_quote())
 
     try:
         with httpx.Client(timeout=30.0) as client:
