@@ -15,8 +15,9 @@ def send_weather_whatsapp(report: WeatherReport) -> str:
     if not is_whatsapp_enabled():
         raise ValueError(
             "WhatsApp is not configured. Set WHATSAPP_PHONE and WHATSAPP_APIKEY in .env. "
-            "Get an API key: open WhatsApp, message +34 644 66 26 75 with text 'I allow callmebot "
-            "to send me messages', then save the apikey they reply with."
+            "Get an API key: add +34 644 53 78 49 as a contact, message it on WhatsApp with "
+            "'I allow callmebot to send me messages', then save the apikey they reply with. "
+            "See https://www.callmebot.com/blog/free-api-whatsapp-messages/"
         )
 
     phone = get_whatsapp_phone()

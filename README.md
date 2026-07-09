@@ -50,10 +50,11 @@ SendGrid requires a verified sender at [SendGrid Sender Authentication](https://
 
 ### WhatsApp (CallMeBot)
 
-1. On WhatsApp, open a chat with **+34 644 66 26 75**
-2. Send exactly: `I allow callmebot to send me messages`
-3. Save the `apikey` they reply with
-4. Put in `.env`:
+1. Add bot phone **+34 644 53 78 49** as a contact (country **Spain / ES +34**)
+2. Open that contact in WhatsApp (not just “New contact” — save it first)
+3. Send exactly: `I allow callmebot to send me messages`
+4. Wait for reply with your `apikey` (can take up to ~2 minutes)
+5. Put in `.env`:
 
 ```env
 WHATSAPP_PHONE=919604423793
