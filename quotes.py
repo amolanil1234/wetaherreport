@@ -46,17 +46,13 @@ def _parse_zenquotes(data: object) -> Quote | None:
 
 
 def _quote_from_james_clear() -> Quote | None:
-    # Prefer ideas + quotes-from-others for the digest inspiration line.
-    stored = list_stored_quotes(kinds={"idea", "quote"})
-    if not stored:
+    # Prefer James Clear's own ideas; fall back to quotes-from-others in the DB.
+    ideas = list_stored_quotes(kinds={"idea"})
+    pool = ideas or list_stored_quotes(kinds={"quote"})
+    if not pool:
         return None
-    pick = random.choice(stored)
-    label = pick.source
-    if pick.kind == "quote":
-        label = f"{pick.source} (quote)"
-    elif pick.kind == "idea":
-        label = f"{pick.source} (idea)"
-    return Quote(text=pick.text, author=pick.author, source=label)
+    pick = random.choice(pool)
+    return Quote(text=pick.text, author=pick.author, source=pick.source)
 
 
 def fetch_live_quote() -> Quote:

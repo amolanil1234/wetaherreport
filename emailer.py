@@ -17,6 +17,7 @@ from config import (
     get_to_email,
 )
 from formatter import build_email_subject, format_report_html, format_report_text
+from quotes import fetch_live_quote
 from weather import WeatherReport
 
 
@@ -25,12 +26,13 @@ def _send_via_sendgrid(
     recipient: str,
     from_email: str,
 ) -> str:
+    quote = fetch_live_quote()
     message = Mail(
         from_email=from_email,
         to_emails=recipient,
         subject=build_email_subject(report),
-        plain_text_content=format_report_text(report),
-        html_content=format_report_html(report),
+        plain_text_content=format_report_text(report, quote),
+        html_content=format_report_html(report, quote),
     )
     try:
         client = SendGridAPIClient(get_sendgrid_api_key())
@@ -49,9 +51,10 @@ def _send_via_smtp(
     from_email: str,
 ) -> str:
     smtp = get_smtp_config()
+    quote = fetch_live_quote()
     subject = build_email_subject(report)
-    text_body = format_report_text(report)
-    html_body = format_report_html(report)
+    text_body = format_report_text(report, quote)
+    html_body = format_report_html(report, quote)
 
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
