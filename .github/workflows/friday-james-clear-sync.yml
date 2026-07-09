@@ -23,24 +23,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Sync James Clear 3-2-1 emails
-        env:
-          EMAIL_PROVIDER: gmail
-          SMTP_HOST: smtp.gmail.com
-          SMTP_PORT: "587"
-          SMTP_SECURE: "false"
-          SMTP_USER: ${{ secrets.SMTP_USER || 'amol.eng@gmail.com' }}
-          SMTP_PASS: ${{ secrets.SMTP_PASS }}
-          IMAP_HOST: imap.gmail.com
-          IMAP_PORT: "993"
-          DIGEST_TIMEZONE: Asia/Kolkata
-        run: |
-          if [ -z "$SMTP_PASS" ]; then
-            echo "ERROR: Repository secret SMTP_PASS is missing or empty."
-            echo "Add it at: Settings → Secrets and variables → Actions"
-            exit 1
-          fi
-          python sync_james_clear_quotes.py --full
+      - name: Sync James Clear 3-2-1 from website
+        run: python sync_james_clear_quotes.py --source web --full
 
       - name: Commit updated quote database
         run: |

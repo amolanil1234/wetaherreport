@@ -50,67 +50,44 @@ SendGrid requires a verified sender at [SendGrid Sender Authentication](https://
 
 ### James Clear 3-2-1 quotes
 
-The daily digest prefers content from James Clear’s newsletter emails (`james@jamesclear.com`, subject contains `3-2-1:`).
+The daily digest pulls content from James Clear’s public archive:
+[https://jamesclear.com/3-2-1](https://jamesclear.com/3-2-1)
 
-Each email stores:
+Each issue stores:
 - **3 Ideas From Me** (James Clear)
 - **2 Quotes From Others**
 - **1 Question For You**
 
-1. Enable **IMAP** in Gmail (Settings → See all settings → Forwarding and POP/IMAP → Enable IMAP)
-2. Use the same Gmail App Password already set as `SMTP_PASS` (or set `IMAP_USER` / `IMAP_PASS`)
-3. Sync **all** matching emails into the local database:
+No Gmail IMAP is required for the default web source.
 
 ```powershell
 cd C:\SB\MCP
-.venv\Scripts\python.exe sync_james_clear_quotes.py --full
+# Sync newest issues from the website
+.venv\Scripts\python.exe sync_james_clear_quotes.py --source web --limit 20
+
+# Or full archive sync
+.venv\Scripts\python.exe sync_james_clear_quotes.py --source web --full
 ```
 
 Stored in `data/james_clear_quotes.json` (`quotes` + `questions`).
 
-**Automatic updates when new mail arrives**
+Optional email fallback (if you prefer inbox sync):
 
-- **Every Friday 8:00 AM IST** — full mailbox sync (Windows Task Scheduler and/or GitHub Actions)
-- Daily digest also does a light **new-only** sync as a safety net
-- Or run a background watcher that polls Gmail:
+```powershell
+.venv\Scripts\python.exe sync_james_clear_quotes.py --source email --full
+```
+
+**Automatic updates**
+
+- **Every Friday 8:00 AM IST** — full website sync (Windows Task Scheduler and/or GitHub Actions)
+- Daily digest also does a light **new-only** web sync as a safety net
 
 ```powershell
 # Register Friday Windows task (once)
 powershell -ExecutionPolicy Bypass -File scripts\register_james_clear_friday_task.ps1
-
-# Or watch continuously (every 5 min)
-.venv\Scripts\python.exe watch_james_clear_quotes.py --poll-seconds 300
 ```
 
-Optional one-shot helpers:
-
-```powershell
-# Full resync of all 3-2-1 emails
-.venv\Scripts\python.exe sync_james_clear_quotes.py --full
-
-# Only emails not already in the DB
-.venv\Scripts\python.exe sync_james_clear_quotes.py --new-only
-
-# Newest 10 emails only
-.venv\Scripts\python.exe sync_james_clear_quotes.py --limit 10
-```
-
-If IMAP sync fails, the digest still sends using the existing DB (or ZenQuotes / local fallback).
-
-### Friday sync (Windows Task Scheduler)
-
-```powershell
-cd C:\SB\MCP
-powershell -ExecutionPolicy Bypass -File scripts\register_james_clear_friday_task.ps1
-```
-
-This creates task `JamesClear321FridaySync` at **8:00 AM every Friday**. Test with:
-
-```powershell
-schtasks /Run /TN JamesClear321FridaySync
-```
-
-Cloud: see [`.github/workflows/friday-james-clear-sync.yml`](.github/workflows/friday-james-clear-sync.yml) (`30 2 * * 5` UTC = Friday 8:00 AM IST). Requires `SMTP_PASS` (same Gmail App Password; used for IMAP).
+Cloud: see [`.github/workflows/friday-james-clear-sync.yml`](.github/workflows/friday-james-clear-sync.yml) (`30 2 * * 5` UTC = Friday 8:00 AM IST).
 
 ### 3. Register MCP in Cursor
 

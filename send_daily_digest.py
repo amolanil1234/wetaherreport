@@ -34,12 +34,13 @@ def main() -> int:
 
     try:
         # Pull any new 3-2-1 emails since last run (ideas + quotes + questions).
-        quote_sync = sync_james_clear_quotes(only_new=True)
+        quote_sync = sync_james_clear_quotes(only_new=True, source="web")
         logger.info(
-            "James Clear sync (%s): emails=%s ideas=%s quotes=%s questions=%s "
+            "James Clear sync (%s/%s): issues=%s ideas=%s quotes=%s questions=%s "
             "added=%s quote_total=%s question_total=%s",
+            quote_sync.get("source"),
             quote_sync.get("mode"),
-            quote_sync.get("emails_scanned"),
+            quote_sync.get("issues_scanned"),
             quote_sync.get("ideas_extracted"),
             quote_sync.get("quotes_extracted"),
             quote_sync.get("questions_extracted"),

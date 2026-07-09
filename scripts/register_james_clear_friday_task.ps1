@@ -18,7 +18,7 @@ if (-not (Test-Path $scriptPath)) {
 
 $action = New-ScheduledTaskAction `
     -Execute $pythonExe `
-    -Argument "`"$scriptPath`" --full" `
+    -Argument "`"$scriptPath`" --source web --full" `
     -WorkingDirectory $projectRoot
 
 # Friday 8:00 AM India Standard Time (after typical Thursday US newsletter delivery)
@@ -38,12 +38,12 @@ Register-ScheduledTask `
     -Trigger $trigger `
     -Settings $settings `
     -Principal $principal `
-    -Description "Every Friday: sync James Clear 3-2-1 ideas, quotes, and questions into data/james_clear_quotes.json" `
+    -Description "Every Friday: sync James Clear 3-2-1 issues from jamesclear.com into data/james_clear_quotes.json" `
     -Force
 
 Write-Host "Registered scheduled task '$taskName' for 8:00 AM every Friday."
 Write-Host "Program: $pythonExe"
-Write-Host "Arguments: $scriptPath --full"
+Write-Host "Arguments: $scriptPath --source web --full"
 Write-Host "Working directory: $projectRoot"
 Write-Host ""
 Write-Host "Test now with: schtasks /Run /TN $taskName"

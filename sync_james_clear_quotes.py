@@ -12,30 +12,36 @@ from james_clear import sync_james_clear_quotes, watch_james_clear_inbox
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
-            "Sync James Clear 3-2-1 emails into data/james_clear_quotes.json "
-            "(3 ideas, 2 quotes from others, 1 question)."
+            "Sync James Clear 3-2-1 issues into data/james_clear_quotes.json "
+            "(default source: https://jamesclear.com/3-2-1)."
         )
+    )
+    parser.add_argument(
+        "--source",
+        choices=("web", "email", "auto"),
+        default="web",
+        help="Where to pull issues from (default: web)",
     )
     parser.add_argument(
         "--limit",
         type=int,
         default=None,
-        help="Only scan the newest N emails (default: all)",
+        help="Only scan the newest N issues (default: all)",
     )
     parser.add_argument(
         "--full",
         action="store_true",
-        help="Rescan all matching emails and refresh stored entries",
+        help="Rescan all matching issues and refresh stored entries",
     )
     parser.add_argument(
         "--new-only",
         action="store_true",
-        help="Only fetch emails not already in the database",
+        help="Only fetch issues not already in the database",
     )
     parser.add_argument(
         "--watch",
         action="store_true",
-        help="Keep running and poll for new 3-2-1 emails",
+        help="Keep running and poll for new 3-2-1 issues",
     )
     parser.add_argument(
         "--poll-seconds",
@@ -46,9 +52,8 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.watch:
-        # Seed with anything missing, then watch.
         try:
-            summary = sync_james_clear_quotes(only_new=True)
+            summary = sync_james_clear_quotes(only_new=True, source=args.source)
             print(json.dumps(summary, indent=2))
         except Exception as exc:
             print(f"Initial sync failed: {exc}", file=sys.stderr)
@@ -60,6 +65,7 @@ def main() -> int:
             limit=args.limit,
             only_new=args.new_only,
             full=args.full or (args.limit is None and not args.new_only),
+            source=args.source,
         )
     except Exception as exc:
         print(f"Sync failed: {exc}", file=sys.stderr)

@@ -15,6 +15,9 @@ from email.message import Message
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Iterable, Literal
+from urllib.parse import urlparse
+
+import httpx
 
 from config import PROJECT_ROOT, get_env, get_smtp_config
 
@@ -23,6 +26,8 @@ DEFAULT_SENDER = "james@jamesclear.com"
 DEFAULT_SUBJECT_MARKER = "3-2-1:"
 DEFAULT_AUTHOR = "James Clear"
 DEFAULT_SOURCE = "James Clear 3-2-1"
+ARCHIVE_URL = "https://jamesclear.com/3-2-1"
+HTTP_HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; WeatherDigest/1.0)"}
 
 EntryKind = Literal["idea", "quote", "question"]
 
@@ -393,6 +398,138 @@ def _parse_fetched_message(
     return message_id, subject, date_iso, body
 
 
+def _html_page_to_text(html: str) -> str:
+    parser = _HTMLToText()
+    parser.feed(html)
+    parser.close()
+    raw = parser.get_text()
+    raw = raw.replace("\r\n", "\n").replace("\r", "\n")
+    raw = re.sub(r"[ \t]+\n", "\n", raw)
+    raw = re.sub(r"\n{3,}", "\n\n", raw)
+    return _strip_invisible(raw).strip()
+
+
+def _slug_to_date_iso(slug: str) -> str:
+    """Convert july-2-2026 → ISO date at noon UTC."""
+    match = re.fullmatch(
+        r"(january|february|march|april|may|june|july|august|september|"
+        r"october|november|december)-(\d{1,2})-(\d{4})",
+        slug.lower(),
+    )
+    if not match:
+        return datetime.now(timezone.utc).isoformat()
+    month_name, day, year = match.groups()
+    months = {
+        "january": 1,
+        "february": 2,
+        "march": 3,
+        "april": 4,
+        "may": 5,
+        "june": 6,
+        "july": 7,
+        "august": 8,
+        "september": 9,
+        "october": 10,
+        "november": 11,
+        "december": 12,
+    }
+    try:
+        dt = datetime(int(year), months[month_name], int(day), 12, 0, tzinfo=timezone.utc)
+        return dt.isoformat()
+    except (ValueError, KeyError):
+        return datetime.now(timezone.utc).isoformat()
+
+
+def _title_from_html(html: str, fallback_slug: str) -> str:
+    for pattern in (
+        r'property="og:title"\s+content="([^"]+)"',
+        r"<h1[^>]*>(.*?)</h1>",
+        r"<title>(.*?)</title>",
+    ):
+        match = re.search(pattern, html, flags=re.I | re.S)
+        if not match:
+            continue
+        title = re.sub(r"<[^>]+>", "", match.group(1))
+        title = re.sub(r"\s+", " ", title).strip()
+        title = re.sub(r"\s*[-|]\s*James Clear\s*$", "", title, flags=re.I).strip()
+        if title.lower().startswith("3-2-1"):
+            return title
+
+    parts = fallback_slug.split("-")
+    if len(parts) >= 3:
+        return f"3-2-1: {parts[0].title()} {parts[1]}, {parts[-1]}"
+    return f"3-2-1: {fallback_slug}"
+
+
+def list_web_issue_urls(limit: int | None = None) -> list[str]:
+    """Return issue URLs from https://jamesclear.com/3-2-1, newest first."""
+    with httpx.Client(timeout=30.0, headers=HTTP_HEADERS, follow_redirects=True) as client:
+        response = client.get(ARCHIVE_URL)
+        response.raise_for_status()
+        html = response.text
+
+    urls = sorted(
+        set(re.findall(r'href="(https://jamesclear\.com/3-2-1/[^"#?]+)"', html))
+    )
+    # Prefer date-like slugs and sort by parsed date descending.
+    dated: list[tuple[str, str]] = []
+    for url in urls:
+        slug = url.rstrip("/").rsplit("/", 1)[-1]
+        if re.fullmatch(
+            r"(january|february|march|april|may|june|july|august|september|"
+            r"october|november|december)-\d{1,2}-\d{4}",
+            slug.lower(),
+        ):
+            dated.append((_slug_to_date_iso(slug), url))
+    dated.sort(key=lambda item: item[0], reverse=True)
+    ordered = [url for _, url in dated]
+    if limit is not None:
+        return ordered[: max(1, limit)]
+    return ordered
+
+
+def fetch_321_web_messages(
+    *,
+    limit: int | None = None,
+    only_new: bool = False,
+    known_message_ids: set[str] | None = None,
+) -> list[tuple[str, str, str, str]]:
+    """
+    Fetch 3-2-1 issues from jamesclear.com as
+    (message_id, subject, date_iso, body_text), newest first.
+    """
+    known = known_message_ids
+    if only_new and known is None:
+        known = known_message_ids_from_db()
+
+    urls = list_web_issue_urls(limit=None if only_new else limit)
+    results: list[tuple[str, str, str, str]] = []
+
+    with httpx.Client(timeout=30.0, headers=HTTP_HEADERS, follow_redirects=True) as client:
+        for url in urls:
+            message_id = url.rstrip("/")
+            if only_new and known and message_id in known:
+                continue
+            slug = urlparse(message_id).path.rstrip("/").rsplit("/", 1)[-1]
+            date_iso = _slug_to_date_iso(slug)
+            try:
+                response = client.get(url)
+                response.raise_for_status()
+            except Exception:
+                continue
+            html = response.text
+            subject = _title_from_html(html, slug)
+            body = _html_page_to_text(html)
+            if not extract_ideas_from_me(body) and not extract_question_for_you(body):
+                continue
+            results.append((message_id, subject, date_iso, body))
+            if limit is not None and len(results) >= max(1, limit):
+                break
+
+    results.sort(key=lambda item: item[2], reverse=True)
+    return results
+
+
 def fetch_321_messages(
     *,
     limit: int | None = None,
@@ -606,20 +743,58 @@ def sync_james_clear_quotes(
     *,
     only_new: bool = False,
     full: bool = False,
+    source: str | None = None,
 ) -> dict:
     """
-    Sync 3-2-1 emails into the local JSON DB.
+    Sync 3-2-1 issues into the local JSON DB.
 
-    - full=True / limit=None → scan all matching emails
-    - only_new=True → fetch only emails not already in the DB (for watchers)
-    - limit=N → newest N emails (manual/debug)
+    source:
+      - "web" (default): scrape https://jamesclear.com/3-2-1
+      - "email": Gmail IMAP
+      - "auto": try web first, fall back to email
     """
     if full:
         limit = None
         only_new = False
 
+    preferred = (source or get_env("JAMES_CLEAR_SOURCE", "web") or "web").lower()
+    if preferred not in {"web", "email", "auto"}:
+        preferred = "web"
+
     known = known_message_ids_from_db() if only_new else None
-    messages = fetch_321_messages(limit=limit, only_new=only_new, known_message_ids=known)
+    messages: list[tuple[str, str, str, str]] = []
+    used_source = preferred
+    errors: list[str] = []
+
+    def _fetch(src: str) -> list[tuple[str, str, str, str]]:
+        if src == "web":
+            return fetch_321_web_messages(
+                limit=limit, only_new=only_new, known_message_ids=known
+            )
+        return fetch_321_messages(
+            limit=limit, only_new=only_new, known_message_ids=known
+        )
+
+    if preferred == "auto":
+        try:
+            messages = _fetch("web")
+            used_source = "web"
+        except Exception as exc:
+            errors.append(f"web: {exc}")
+            messages = _fetch("email")
+            used_source = "email"
+    else:
+        try:
+            messages = _fetch(preferred)
+            used_source = preferred
+        except Exception as exc:
+            if preferred == "web":
+                errors.append(f"web: {exc}")
+                messages = _fetch("email")
+                used_source = "email"
+            else:
+                raise
+
     incoming = entries_from_messages(messages)
 
     db = load_quote_db()
@@ -653,7 +828,9 @@ def sync_james_clear_quotes(
     qs = sum(1 for item in incoming if item.kind == "question")
 
     return {
+        "source": used_source,
         "mode": "new_only" if only_new else ("full" if limit is None else f"limit:{limit}"),
+        "issues_scanned": len(messages),
         "emails_scanned": len(messages),
         "ideas_extracted": ideas,
         "quotes_extracted": others,
@@ -664,6 +841,7 @@ def sync_james_clear_quotes(
         "emails_tracked": len(synced_ids),
         "db_path": str(path),
         "subjects": [subject for _, subject, _, _ in messages],
+        "errors": errors,
     }
 
 
@@ -768,7 +946,7 @@ def _issue_from_message_id(
 
 
 def list_321_issues(path: Path | None = None) -> list[Latest321Issue]:
-    """All synced issues, newest first."""
+    """All synced issues, newest first (deduped by date + subject; prefer web URLs)."""
     ideas = list_stored_quotes(path, kinds={"idea"})
     questions = list_stored_questions(path)
     if not ideas and not questions:
@@ -782,12 +960,23 @@ def list_321_issues(path: Path | None = None) -> list[Latest321Issue]:
         if item.email_date >= prev:
             by_id[item.message_id] = item.email_date
 
-    ordered_ids = sorted(by_id.keys(), key=lambda mid: by_id[mid], reverse=True)
+    # Prefer website URLs over email Message-IDs for the same calendar day.
+    ordered_ids = sorted(
+        by_id.keys(),
+        key=lambda mid: (by_id[mid][:10], mid.startswith("http"), by_id[mid]),
+        reverse=True,
+    )
     issues: list[Latest321Issue] = []
+    seen_keys: set[str] = set()
     for message_id in ordered_ids:
         issue = _issue_from_message_id(message_id, ideas, questions)
-        if issue:
-            issues.append(issue)
+        if not issue:
+            continue
+        key = f"{issue.email_date[:10]}|{issue.email_subject.lower().strip()}"
+        if key in seen_keys:
+            continue
+        seen_keys.add(key)
+        issues.append(issue)
     return issues
 
 
