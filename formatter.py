@@ -5,7 +5,6 @@ from __future__ import annotations
 from datetime import datetime
 from html import escape
 
-from config import OPEN_METEO_ATTRIBUTION
 from quotes import DigestInspiration, fetch_digest_inspiration
 from weather import CityWeather, CurrentConditions, DailyForecast, WeatherReport
 
@@ -155,9 +154,6 @@ def format_report_text(
     for city in report.cities:
         sections.append(format_city_text(city))
         sections.append("")
-    sections.append(OPEN_METEO_ATTRIBUTION)
-    if inspiration:
-        sections.append("From James Clear's 3-2-1 newsletter")
     return "\n".join(sections).strip()
 
 
@@ -227,15 +223,6 @@ def format_report_html(
         mark_used=False
     )
     city_blocks = "".join(_city_html_block(city) for city in report.cities)
-    quote_attr = ""
-    if inspiration:
-        quote_attr = (
-            '<p style="margin-top:8px;font-size:11px;color:#888;">'
-            "From "
-            '<a href="https://jamesclear.com/3-2-1" target="_blank">'
-            "James Clear's 3-2-1 newsletter</a>"
-            "</p>"
-        )
     return f"""
     <html>
       <body style="font-family:Segoe UI,Arial,sans-serif;color:#222;">
@@ -244,10 +231,6 @@ def format_report_html(
            <strong>Timezone:</strong> {report.timezone}</p>
         {_inspiration_html(inspiration)}
         {city_blocks}
-        <p style="margin-top:24px;font-size:12px;color:#666;">
-          <a href="https://open-meteo.com/">{OPEN_METEO_ATTRIBUTION}</a>
-        </p>
-        {quote_attr}
       </body>
     </html>
     """.strip()
@@ -325,7 +308,4 @@ def format_report_markdown(
                     lines.append(f"  - Sunrise {day.sunrise or 'N/A'}, Sunset {day.sunset or 'N/A'}")
         lines.append("")
 
-    lines.append(f"*{OPEN_METEO_ATTRIBUTION}*")
-    if inspiration:
-        lines.append("*From James Clear's 3-2-1 newsletter*")
-    return "\n".join(lines)
+    return "\n".join(lines).strip()
