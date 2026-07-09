@@ -84,7 +84,7 @@ def format_city_text(city: CityWeather) -> str:
 def _inspiration_text(inspiration: DigestInspiration | None) -> list[str]:
     if not inspiration:
         return []
-    lines: list[str] = ["3 Ideas From Me", ""]
+    lines: list[str] = ["3 ideas from James Clear", ""]
     if inspiration.subject:
         lines.append(inspiration.subject)
         lines.append("")
@@ -124,7 +124,7 @@ def _inspiration_html(inspiration: DigestInspiration | None) -> str:
     return f"""
     <div style="margin:20px 0;padding:16px 20px;border-left:4px solid #0b6e4f;background:#f3faf7;">
       <p style="margin:0 0 8px 0;font-size:18px;font-weight:700;color:#0b6e4f;">
-        3 Ideas From Me
+        3 ideas from James Clear
       </p>
       {subject}
       <ol style="margin:0;padding-left:20px;">
@@ -259,7 +259,7 @@ def format_report_markdown(
         "",
     ]
     if inspiration:
-        lines.append("## 3 Ideas From Me")
+        lines.append("## 3 ideas from James Clear")
         lines.append("")
         if inspiration.subject:
             lines.append(f"*{inspiration.subject}*")
