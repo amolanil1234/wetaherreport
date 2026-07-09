@@ -102,32 +102,35 @@ def _inspiration_text(inspiration: DigestInspiration | None) -> list[str]:
 def _inspiration_html(inspiration: DigestInspiration | None) -> str:
     if not inspiration:
         return ""
+    # Keep idea + question body text identical (size/weight/line-height).
+    body_style = "margin:0 0 12px 0;font-size:15px;font-weight:400;line-height:1.5;color:#222;"
+    heading_style = "margin:0 0 8px 0;font-size:18px;font-weight:700;color:#0b6e4f;"
     idea_items = "".join(
-        f"<li style=\"margin:0 0 12px 0;line-height:1.5;\">{escape(idea)}</li>"
-        for idea in inspiration.ideas
+        f'<li style="{body_style}">{escape(idea)}</li>' for idea in inspiration.ideas
     )
     subject = (
-        f'<p style="margin:0 0 12px 0;font-size:13px;color:#555;">{escape(inspiration.subject)}</p>'
+        f'<p style="margin:0 0 12px 0;font-size:13px;font-weight:400;color:#555;line-height:1.4;">'
+        f"{escape(inspiration.subject)}</p>"
         if inspiration.subject
         else ""
     )
     question_block = ""
     if inspiration.question:
         question_block = f"""
-        <p style="margin:18px 0 8px 0;font-size:16px;font-weight:700;color:#0b6e4f;">
+        <p style="{heading_style} margin-top:18px;">
           1 Question For You
         </p>
-        <p style="margin:0;font-size:15px;line-height:1.5;">
+        <p style="{body_style} margin-bottom:0;">
           {escape(inspiration.question)}
         </p>
         """
     return f"""
-    <div style="margin:20px 0;padding:16px 20px;border-left:4px solid #0b6e4f;background:#f3faf7;">
-      <p style="margin:0 0 8px 0;font-size:18px;font-weight:700;color:#0b6e4f;">
+    <div style="margin:20px 0;padding:16px 20px;border-left:4px solid #0b6e4f;background:#f3faf7;font-family:Segoe UI,Arial,sans-serif;">
+      <p style="{heading_style}">
         3 ideas from James Clear
       </p>
       {subject}
-      <ol style="margin:0;padding-left:20px;">
+      <ol style="margin:0;padding-left:20px;font-size:15px;color:#222;">
         {idea_items}
       </ol>
       {question_block}
