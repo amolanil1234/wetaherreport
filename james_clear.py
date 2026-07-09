@@ -507,6 +507,7 @@ def load_quote_db(path: Path | None = None) -> dict:
         return {
             "updated_at": None,
             "synced_message_ids": [],
+            "used_in_digest_message_ids": [],
             "quotes": [],
             "questions": [],
         }
@@ -516,6 +517,7 @@ def load_quote_db(path: Path | None = None) -> dict:
         return {
             "updated_at": None,
             "synced_message_ids": [],
+            "used_in_digest_message_ids": [],
             "quotes": [],
             "questions": [],
         }
@@ -525,6 +527,8 @@ def load_quote_db(path: Path | None = None) -> dict:
         data["questions"] = []
     if not isinstance(data.get("synced_message_ids"), list):
         data["synced_message_ids"] = []
+    if not isinstance(data.get("used_in_digest_message_ids"), list):
+        data["used_in_digest_message_ids"] = []
     return data
 
 
@@ -725,23 +729,13 @@ class Latest321Issue:
     question: StoredQuote | None
 
 
-def get_latest_321_issue(path: Path | None = None) -> Latest321Issue | None:
-    """
-    Return the newest synced 3-2-1 issue with its 3 ideas and 1 question.
-    """
-    ideas = list_stored_quotes(path, kinds={"idea"})
-    questions = list_stored_questions(path)
-    if not ideas and not questions:
-        return None
-
-    # Newest message_id by email_date.
-    candidates = ideas + questions
-    newest_date = max(str(item.email_date or "") for item in candidates)
-    newest_items = [item for item in candidates if item.email_date == newest_date]
-    message_id = newest_items[0].message_id if newest_items else ""
+def _issue_from_message_id(
+    message_id: str,
+    ideas: list[StoredQuote],
+    questions: list[StoredQuote],
+) -> Latest321Issue | None:
     if not message_id:
         return None
-
     issue_ideas = tuple(
         sorted(
             (item for item in ideas if item.message_id == message_id),
@@ -752,18 +746,104 @@ def get_latest_321_issue(path: Path | None = None) -> Latest321Issue | None:
         (item for item in questions if item.message_id == message_id),
         None,
     )
+    if not issue_ideas and not issue_question:
+        return None
     subject = (
         issue_ideas[0].email_subject
         if issue_ideas
         else (issue_question.email_subject if issue_question else "")
     )
+    email_date = (
+        issue_ideas[0].email_date
+        if issue_ideas
+        else (issue_question.email_date if issue_question else "")
+    )
     return Latest321Issue(
         email_subject=subject,
-        email_date=newest_date,
+        email_date=email_date,
         message_id=message_id,
         ideas=issue_ideas,
         question=issue_question,
     )
+
+
+def list_321_issues(path: Path | None = None) -> list[Latest321Issue]:
+    """All synced issues, newest first."""
+    ideas = list_stored_quotes(path, kinds={"idea"})
+    questions = list_stored_questions(path)
+    if not ideas and not questions:
+        return []
+
+    by_id: dict[str, str] = {}
+    for item in ideas + questions:
+        if not item.message_id:
+            continue
+        prev = by_id.get(item.message_id, "")
+        if item.email_date >= prev:
+            by_id[item.message_id] = item.email_date
+
+    ordered_ids = sorted(by_id.keys(), key=lambda mid: by_id[mid], reverse=True)
+    issues: list[Latest321Issue] = []
+    for message_id in ordered_ids:
+        issue = _issue_from_message_id(message_id, ideas, questions)
+        if issue:
+            issues.append(issue)
+    return issues
+
+
+def get_used_digest_message_ids(path: Path | None = None) -> set[str]:
+    db = load_quote_db(path)
+    return {str(item) for item in db.get("used_in_digest_message_ids") or []}
+
+
+def mark_issue_used_in_digest(message_id: str, path: Path | None = None) -> None:
+    if not message_id:
+        return
+    db = load_quote_db(path)
+    used = [str(item) for item in db.get("used_in_digest_message_ids") or []]
+    if message_id not in used:
+        used.append(message_id)
+    db["used_in_digest_message_ids"] = used
+    save_quote_db(db, path)
+
+
+def reset_used_digest_message_ids(path: Path | None = None) -> None:
+    db = load_quote_db(path)
+    db["used_in_digest_message_ids"] = []
+    save_quote_db(db, path)
+
+
+def get_latest_321_issue(path: Path | None = None) -> Latest321Issue | None:
+    """Return the newest synced 3-2-1 issue with its 3 ideas and 1 question."""
+    issues = list_321_issues(path)
+    return issues[0] if issues else None
+
+
+def pick_next_321_issue(
+    path: Path | None = None,
+    *,
+    mark_used: bool = True,
+) -> Latest321Issue | None:
+    """
+    Pick the next unused 3-2-1 issue (newest unused first).
+
+    Once every issue has been used in a digest, the used list resets and
+    rotation starts over so digests never get stuck empty.
+    """
+    issues = list_321_issues(path)
+    if not issues:
+        return None
+
+    used = get_used_digest_message_ids(path)
+    unused = [issue for issue in issues if issue.message_id not in used]
+    if not unused:
+        reset_used_digest_message_ids(path)
+        unused = issues
+
+    pick = unused[0]
+    if mark_used:
+        mark_issue_used_in_digest(pick.message_id, path)
+    return pick
 
 
 def watch_james_clear_inbox(poll_seconds: int = 300) -> None:

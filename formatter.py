@@ -142,7 +142,9 @@ def format_report_text(
     report: WeatherReport,
     inspiration: DigestInspiration | None = None,
 ) -> str:
-    inspiration = inspiration if inspiration is not None else fetch_digest_inspiration()
+    inspiration = inspiration if inspiration is not None else fetch_digest_inspiration(
+        mark_used=False
+    )
     sections = [
         "Daily Weather Digest",
         f"Generated: {report.generated_at}",
@@ -221,7 +223,9 @@ def format_report_html(
     report: WeatherReport,
     inspiration: DigestInspiration | None = None,
 ) -> str:
-    inspiration = inspiration if inspiration is not None else fetch_digest_inspiration()
+    inspiration = inspiration if inspiration is not None else fetch_digest_inspiration(
+        mark_used=False
+    )
     city_blocks = "".join(_city_html_block(city) for city in report.cities)
     quote_attr = ""
     if inspiration:
@@ -253,7 +257,9 @@ def format_report_markdown(
     report: WeatherReport,
     inspiration: DigestInspiration | None = None,
 ) -> str:
-    inspiration = inspiration if inspiration is not None else fetch_digest_inspiration()
+    inspiration = inspiration if inspiration is not None else fetch_digest_inspiration(
+        mark_used=False
+    )
     lines = [
         "# Daily Weather Digest",
         "",

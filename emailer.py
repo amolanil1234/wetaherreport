@@ -17,7 +17,7 @@ from config import (
     get_to_email,
 )
 from formatter import build_email_subject, format_report_html, format_report_text
-from quotes import fetch_digest_inspiration
+from quotes import DigestInspiration, fetch_digest_inspiration
 from weather import WeatherReport
 
 
@@ -25,8 +25,8 @@ def _send_via_sendgrid(
     report: WeatherReport,
     recipient: str,
     from_email: str,
+    inspiration: DigestInspiration | None,
 ) -> str:
-    inspiration = fetch_digest_inspiration()
     message = Mail(
         from_email=from_email,
         to_emails=recipient,
@@ -49,9 +49,9 @@ def _send_via_smtp(
     report: WeatherReport,
     recipient: str,
     from_email: str,
+    inspiration: DigestInspiration | None,
 ) -> str:
     smtp = get_smtp_config()
-    inspiration = fetch_digest_inspiration()
     subject = build_email_subject(report)
     text_body = format_report_text(report, inspiration)
     html_body = format_report_html(report, inspiration)
@@ -81,11 +81,18 @@ def _send_via_smtp(
     return f"Email sent to {recipient} via SMTP ({smtp.host})"
 
 
-def send_weather_email(report: WeatherReport, to_email: str | None = None) -> str:
+def send_weather_email(
+    report: WeatherReport,
+    to_email: str | None = None,
+    inspiration: DigestInspiration | None = None,
+) -> str:
     recipient = to_email or get_to_email()
     from_email = get_from_email()
     provider = get_email_provider()
+    # Mark used only once per send (caller may pass a pre-picked issue).
+    if inspiration is None:
+        inspiration = fetch_digest_inspiration(mark_used=True)
 
     if provider == "sendgrid":
-        return _send_via_sendgrid(report, recipient, from_email)
-    return _send_via_smtp(report, recipient, from_email)
+        return _send_via_sendgrid(report, recipient, from_email, inspiration)
+    return _send_via_smtp(report, recipient, from_email, inspiration)

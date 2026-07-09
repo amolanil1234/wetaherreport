@@ -36,6 +36,7 @@ from mcp.server.fastmcp import FastMCP
 from config import DEFAULT_CITIES, CityConfig, get_digest_timezone
 from emailer import send_weather_email
 from formatter import format_report_markdown
+from quotes import fetch_digest_inspiration
 from weather import build_weather_report, fetch_city_weather
 
 mcp = FastMCP("Weather Email")
@@ -73,12 +74,15 @@ def send_weather_email_now() -> str:
                 + format_report_markdown(report)
             )
         lines = ["# Weather Digest — RESULTS", ""]
+        inspiration = fetch_digest_inspiration(mark_used=True)
         try:
-            lines.append(f"- Email: {send_weather_email(report)}")
+            lines.append(
+                f"- Email: {send_weather_email(report, inspiration=inspiration)}"
+            )
         except Exception as email_exc:
             lines.append(f"- Email: FAILED — {email_exc}")
         lines.append("")
-        lines.append(format_report_markdown(report))
+        lines.append(format_report_markdown(report, inspiration))
         return "\n".join(lines)
     except Exception as exc:
         return (

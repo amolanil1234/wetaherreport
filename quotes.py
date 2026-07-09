@@ -4,22 +4,28 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from james_clear import Latest321Issue, get_latest_321_issue
+from james_clear import Latest321Issue, pick_next_321_issue
 
 
 @dataclass(frozen=True)
 class DigestInspiration:
-    """Latest 3-2-1 issue content shown in the weather email."""
+    """One 3-2-1 issue shown in the weather email."""
 
     subject: str
     ideas: tuple[str, ...]
     question: str | None
+    message_id: str = ""
     source: str = "James Clear 3-2-1"
 
 
-def fetch_digest_inspiration() -> DigestInspiration | None:
-    """Return the newest synced issue's 3 Ideas From Me + 1 Question For You."""
-    issue: Latest321Issue | None = get_latest_321_issue()
+def fetch_digest_inspiration(*, mark_used: bool = True) -> DigestInspiration | None:
+    """
+    Return the next unused 3-2-1 issue (3 ideas + 1 question).
+
+    Marks the issue as used so the next digest gets a different set.
+    After all issues are used once, rotation starts over.
+    """
+    issue: Latest321Issue | None = pick_next_321_issue(mark_used=mark_used)
     if not issue:
         return None
     if not issue.ideas and not issue.question:
@@ -28,11 +34,11 @@ def fetch_digest_inspiration() -> DigestInspiration | None:
         subject=issue.email_subject,
         ideas=tuple(item.text for item in issue.ideas),
         question=issue.question.text if issue.question else None,
+        message_id=issue.message_id,
         source="James Clear 3-2-1",
     )
 
 
-# Keep Quote helpers available for any callers that still expect a single quote.
 @dataclass(frozen=True)
 class Quote:
     text: str
@@ -41,8 +47,8 @@ class Quote:
 
 
 def fetch_live_quote() -> Quote:
-    """Fallback single-quote helper (first idea from latest issue)."""
-    inspiration = fetch_digest_inspiration()
+    """Fallback single-quote helper (first idea from next unused issue)."""
+    inspiration = fetch_digest_inspiration(mark_used=True)
     if inspiration and inspiration.ideas:
         return Quote(
             text=inspiration.ideas[0],

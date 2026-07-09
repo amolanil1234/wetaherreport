@@ -10,6 +10,7 @@ from config import DEFAULT_CITIES, ensure_log_dir, get_digest_timezone
 from emailer import send_weather_email
 from formatter import format_report_markdown
 from james_clear import sync_james_clear_quotes
+from quotes import fetch_digest_inspiration
 from weather import build_weather_report
 
 
@@ -67,15 +68,26 @@ def main() -> int:
         logger.error("All cities failed; email not sent")
         return 1
 
+    inspiration = fetch_digest_inspiration(mark_used=True)
+    if inspiration:
+        logger.info(
+            "Using 3-2-1 issue: %s (ideas=%s question=%s)",
+            inspiration.subject,
+            len(inspiration.ideas),
+            bool(inspiration.question),
+        )
+    else:
+        logger.warning("No James Clear 3-2-1 issue available for this digest")
+
     try:
-        result = send_weather_email(report)
+        result = send_weather_email(report, inspiration=inspiration)
         logger.info(result)
     except Exception:
         logger.exception("Failed to send weather email")
         return 1
 
     logger.info("Digest completed at %s", datetime.now().isoformat())
-    print(format_report_markdown(report))
+    print(format_report_markdown(report, inspiration))
     return 0
 
 
