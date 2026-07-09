@@ -22,14 +22,14 @@ jobs:
 
       - name: Send daily weather digest
         env:
-          EMAIL_PROVIDER: ${{ secrets.EMAIL_PROVIDER }}
-          SMTP_HOST: ${{ secrets.SMTP_HOST }}
-          SMTP_PORT: ${{ secrets.SMTP_PORT }}
-          SMTP_SECURE: ${{ secrets.SMTP_SECURE }}
+          # Defaults work for Gmail; override via secrets if needed
+          EMAIL_PROVIDER: ${{ secrets.EMAIL_PROVIDER || 'gmail' }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST || 'smtp.gmail.com' }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
+          SMTP_SECURE: ${{ secrets.SMTP_SECURE || 'false' }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
-          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
-          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          FROM_EMAIL: ${{ secrets.FROM_EMAIL || secrets.SMTP_USER }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL || 'amol.eng@gmail.com' }}
           DIGEST_TIMEZONE: Asia/Kolkata
         run: python send_daily_digest.py

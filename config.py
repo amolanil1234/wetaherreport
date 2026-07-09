@@ -80,7 +80,14 @@ def get_sendgrid_api_key() -> str:
 
 
 def get_from_email() -> str:
-    return required_env("FROM_EMAIL")
+    # Prefer FROM_EMAIL; for Gmail/SMTP fall back to SMTP_USER.
+    value = get_env("FROM_EMAIL") or get_env("SMTP_USER")
+    if not value:
+        raise ValueError(
+            "Missing required environment variable: FROM_EMAIL "
+            "(or set SMTP_USER when using Gmail SMTP)"
+        )
+    return value
 
 
 def get_to_email() -> str:
