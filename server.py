@@ -1,5 +1,5 @@
 """
-MCP server for daily weather digest (Delhi, Mumbai, Nagpur).
+MCP server for daily weather digest (Delhi, Nagpur).
 Run: python server.py  (stdio transport for Cursor)
 """
 
@@ -45,7 +45,7 @@ mcp = FastMCP("Weather Email")
 @mcp.tool()
 def get_weather_report() -> str:
     """
-    Fetch and return a formatted weather report for Delhi, Mumbai, and Nagpur.
+    Fetch and return a formatted weather report for Delhi and Nagpur.
     Does not send email.
     """
     try:
@@ -62,7 +62,7 @@ def get_weather_report() -> str:
 @mcp.tool()
 def send_weather_email_now() -> str:
     """
-    Fetch weather for Delhi, Mumbai, and Nagpur and send email + WhatsApp immediately.
+    Fetch weather for Delhi and Nagpur and send email + WhatsApp immediately.
     Email needs SMTP/SendGrid in .env. WhatsApp needs WHATSAPP_APIKEY (CallMeBot).
     """
     try:

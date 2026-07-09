@@ -34,7 +34,6 @@ class SmtpConfig:
 
 DEFAULT_CITIES: tuple[CityConfig, ...] = (
     CityConfig("Delhi"),
-    CityConfig("Mumbai"),
     CityConfig("Nagpur"),
 )
 

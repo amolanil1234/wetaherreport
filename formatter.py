@@ -5,10 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 
 from config import OPEN_METEO_ATTRIBUTION
-from quotes import Quote, fetch_live_quote
 from weather import CityWeather, CurrentConditions, DailyForecast, WeatherReport
-
-SMILE_AND_CONNECT = "Smile and Connect"
 
 
 def _format_number(value: float | None, suffix: str = "") -> str:
@@ -82,47 +79,17 @@ def format_city_text(city: CityWeather) -> str:
     return "\n".join(lines)
 
 
-def _inspiration_text(quote: Quote) -> list[str]:
-    return [
-        f"*** {SMILE_AND_CONNECT} ***",
-        "",
-        f'"{quote.text}"',
-        f"— {quote.author}",
-        "",
-    ]
-
-
-def _inspiration_html(quote: Quote) -> str:
-    return f"""
-    <div style="margin:20px 0;padding:16px 20px;border-left:4px solid #0b6e4f;background:#f3faf7;">
-      <p style="margin:0 0 12px 0;font-size:22px;font-weight:700;color:#0b6e4f;letter-spacing:0.5px;">
-        {SMILE_AND_CONNECT}
-      </p>
-      <p style="margin:0;font-size:16px;font-style:italic;line-height:1.5;">
-        &ldquo;{quote.text}&rdquo;
-      </p>
-      <p style="margin:10px 0 0 0;font-size:14px;color:#444;">
-        — <strong>{quote.author}</strong>
-      </p>
-    </div>
-    """
-
-
-def format_report_text(report: WeatherReport, quote: Quote | None = None) -> str:
-    quote = quote or fetch_live_quote()
+def format_report_text(report: WeatherReport) -> str:
     sections = [
         "Daily Weather Digest",
         f"Generated: {report.generated_at}",
         f"Timezone: {report.timezone}",
         "",
-        *_inspiration_text(quote),
     ]
     for city in report.cities:
         sections.append(format_city_text(city))
         sections.append("")
     sections.append(OPEN_METEO_ATTRIBUTION)
-    if quote.source == "ZenQuotes":
-        sections.append("Inspirational quotes provided by https://zenquotes.io/")
     return "\n".join(sections).strip()
 
 
@@ -184,41 +151,26 @@ def _city_html_block(city: CityWeather) -> str:
     return f"<h2>{city.city_name}</h2>{location}{current_rows}{daily_rows}"
 
 
-def format_report_html(report: WeatherReport, quote: Quote | None = None) -> str:
-    quote = quote or fetch_live_quote()
+def format_report_html(report: WeatherReport) -> str:
     city_blocks = "".join(_city_html_block(city) for city in report.cities)
-    quote_attr = ""
-    if quote.source == "ZenQuotes":
-        quote_attr = (
-            '<p style="margin-top:8px;font-size:11px;color:#888;">'
-            "Inspirational quotes provided by "
-            '<a href="https://zenquotes.io/" target="_blank">ZenQuotes API</a>'
-            "</p>"
-        )
     return f"""
     <html>
       <body style="font-family:Segoe UI,Arial,sans-serif;color:#222;">
         <h1>Daily Weather Digest</h1>
         <p><strong>Generated:</strong> {report.generated_at}<br/>
            <strong>Timezone:</strong> {report.timezone}</p>
-        {_inspiration_html(quote)}
         {city_blocks}
         <p style="margin-top:24px;font-size:12px;color:#666;">
           <a href="https://open-meteo.com/">{OPEN_METEO_ATTRIBUTION}</a>
         </p>
-        {quote_attr}
       </body>
     </html>
     """.strip()
 
 
-def format_report_whatsapp(report: WeatherReport, quote: Quote | None = None) -> str:
+def format_report_whatsapp(report: WeatherReport) -> str:
     """Short plain-text summary suitable for WhatsApp."""
-    quote = quote or fetch_live_quote()
     lines = [
-        f"*{SMILE_AND_CONNECT}*",
-        f'"{quote.text}" — {quote.author}',
-        "",
         f"Weather digest — {datetime.now().strftime('%d %b %Y')}",
         "",
     ]
@@ -248,18 +200,12 @@ def format_report_whatsapp(report: WeatherReport, quote: Quote | None = None) ->
     return "\n".join(lines).strip()
 
 
-def format_report_markdown(report: WeatherReport, quote: Quote | None = None) -> str:
-    quote = quote or fetch_live_quote()
+def format_report_markdown(report: WeatherReport) -> str:
     lines = [
         "# Daily Weather Digest",
         "",
         f"**Generated:** {report.generated_at}",
         f"**Timezone:** {report.timezone}",
-        "",
-        f"## **{SMILE_AND_CONNECT}**",
-        "",
-        f'> "{quote.text}"',
-        f"> — {quote.author}",
         "",
     ]
     for city in report.cities:
@@ -306,6 +252,4 @@ def format_report_markdown(report: WeatherReport, quote: Quote | None = None) ->
         lines.append("")
 
     lines.append(f"*{OPEN_METEO_ATTRIBUTION}*")
-    if quote.source == "ZenQuotes":
-        lines.append("*Inspirational quotes provided by https://zenquotes.io/*")
     return "\n".join(lines)

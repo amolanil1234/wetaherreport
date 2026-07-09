@@ -1,28 +1,28 @@
-# Registers a Windows Task Scheduler job for daily weather digest at 7:00 AM IST.
-# Run: powershell -ExecutionPolicy Bypass -File scripts\register_scheduled_task.ps1
+# Registers a Windows Task Scheduler job for James Clear 3-2-1 sync every Friday.
+# Run: powershell -ExecutionPolicy Bypass -File scripts\register_james_clear_friday_task.ps1
 
 $ErrorActionPreference = "Stop"
 
-$taskName = "WeatherEmailDigest"
+$taskName = "JamesClear321FridaySync"
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $pythonExe = Join-Path $projectRoot ".venv\Scripts\python.exe"
-$scriptPath = Join-Path $projectRoot "send_daily_digest.py"
+$scriptPath = Join-Path $projectRoot "sync_james_clear_quotes.py"
 
 if (-not (Test-Path $pythonExe)) {
     throw "Python venv not found at $pythonExe. Run: python -m venv .venv; .venv\Scripts\pip install -r requirements.txt"
 }
 
 if (-not (Test-Path $scriptPath)) {
-    throw "Digest script not found at $scriptPath"
+    throw "Sync script not found at $scriptPath"
 }
 
 $action = New-ScheduledTaskAction `
     -Execute $pythonExe `
-    -Argument $scriptPath `
+    -Argument "`"$scriptPath`" --full" `
     -WorkingDirectory $projectRoot
 
-# 7:00 AM in India Standard Time
-$trigger = New-ScheduledTaskTrigger -Daily -At "7:00AM"
+# Friday 8:00 AM India Standard Time (after typical Thursday US newsletter delivery)
+$trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Friday -At "8:00AM"
 
 $settings = New-ScheduledTaskSettingsSet `
     -AllowStartIfOnBatteries `
@@ -38,12 +38,12 @@ Register-ScheduledTask `
     -Trigger $trigger `
     -Settings $settings `
     -Principal $principal `
-    -Description "Daily weather digest for Delhi and Nagpur via Open-Meteo and SendGrid" `
+    -Description "Every Friday: sync James Clear 3-2-1 ideas, quotes, and questions into data/james_clear_quotes.json" `
     -Force
 
-Write-Host "Registered scheduled task '$taskName' for 7:00 AM daily."
+Write-Host "Registered scheduled task '$taskName' for 8:00 AM every Friday."
 Write-Host "Program: $pythonExe"
-Write-Host "Arguments: $scriptPath"
+Write-Host "Arguments: $scriptPath --full"
 Write-Host "Working directory: $projectRoot"
 Write-Host ""
 Write-Host "Test now with: schtasks /Run /TN $taskName"

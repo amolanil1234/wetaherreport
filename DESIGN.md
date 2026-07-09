@@ -11,7 +11,6 @@ This project sends a **daily weather digest email** for three Indian cities:
 | City   | Country |
 |--------|---------|
 | Delhi  | IN      |
-| Mumbai | IN      |
 | Nagpur | IN      |
 
 It also exposes an **MCP server** so Cursor (or any MCP client) can fetch weather or send email on demand.
@@ -151,7 +150,7 @@ Represents one city to fetch weather for.
 | `name` | `str` | `"Delhi"` |
 | `country_code` | `str` | `"IN"` |
 
-**Default list:** `DEFAULT_CITIES` = Delhi, Mumbai, Nagpur (all `country_code="IN"`)
+**Default list:** `DEFAULT_CITIES` = Delhi, Nagpur (all `country_code="IN"`)
 
 #### `SmtpConfig` (frozen dataclass)
 SMTP connection settings from `.env`.
@@ -328,7 +327,7 @@ classDiagram
 
 | Function | Returns | Purpose |
 |----------|---------|---------|
-| `build_email_subject(report)` | `str` | e.g. `Daily Weather — Delhi, Mumbai, Nagpur — 14 Jun 2026` |
+| `build_email_subject(report)` | `str` | e.g. `Daily Weather — Delhi, Nagpur — 14 Jun 2026` |
 | `format_report_text(report)` | `str` | Plain-text email body |
 | `format_report_html(report)` | `str` | HTML email with tables |
 | `format_report_markdown(report)` | `str` | Markdown (for MCP tool responses) |
@@ -549,7 +548,7 @@ cd C:\SB\MCP
 ```
 
 ### Show MCP in Cursor
-Ask: *"Use get_weather_report to show Delhi, Mumbai, Nagpur weather"*
+Ask: *"Use get_weather_report to show Delhi and Nagpur weather"*
 
 ### Show email send (needs `.env` configured)
 ```powershell

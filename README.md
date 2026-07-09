@@ -1,11 +1,12 @@
 # Weather Email MCP Server
 
-Daily weather digest for **Delhi**, **Mumbai**, and **Nagpur** using [Open-Meteo](https://open-meteo.com/), delivered to **amol.eng@gmail.com** via **SendGrid**.
+Daily weather digest for **Delhi** and **Nagpur** using [Open-Meteo](https://open-meteo.com/), delivered to **amol.eng@gmail.com** via **SendGrid**.
 
 Includes:
 - **MCP server** (`server.py`) — on-demand weather tools in Cursor
 - **Scheduler script** (`send_daily_digest.py`) — for Windows Task Scheduler or cloud cron
 - **WhatsApp** — short digest to your phone via CallMeBot (optional)
+- **James Clear quotes** — pulls “3 Ideas From Me” from your `3-2-1:` emails into a local DB and uses them in the digest
 
 **Team documentation:** See [DESIGN.md](DESIGN.md) for architecture, classes, APIs, and data flow.
 
@@ -62,6 +63,70 @@ WHATSAPP_APIKEY=your_apikey_here
 ```
 
 Also add `WHATSAPP_APIKEY` as a GitHub Actions repository secret for cloud runs.
+
+### James Clear 3-2-1 quotes
+
+The daily digest prefers content from James Clear’s newsletter emails (`james@jamesclear.com`, subject contains `3-2-1:`).
+
+Each email stores:
+- **3 Ideas From Me** (James Clear)
+- **2 Quotes From Others**
+- **1 Question For You**
+
+1. Enable **IMAP** in Gmail (Settings → See all settings → Forwarding and POP/IMAP → Enable IMAP)
+2. Use the same Gmail App Password already set as `SMTP_PASS` (or set `IMAP_USER` / `IMAP_PASS`)
+3. Sync **all** matching emails into the local database:
+
+```powershell
+cd C:\SB\MCP
+.venv\Scripts\python.exe sync_james_clear_quotes.py --full
+```
+
+Stored in `data/james_clear_quotes.json` (`quotes` + `questions`).
+
+**Automatic updates when new mail arrives**
+
+- **Every Friday 8:00 AM IST** — full mailbox sync (Windows Task Scheduler and/or GitHub Actions)
+- Daily digest also does a light **new-only** sync as a safety net
+- Or run a background watcher that polls Gmail:
+
+```powershell
+# Register Friday Windows task (once)
+powershell -ExecutionPolicy Bypass -File scripts\register_james_clear_friday_task.ps1
+
+# Or watch continuously (every 5 min)
+.venv\Scripts\python.exe watch_james_clear_quotes.py --poll-seconds 300
+```
+
+Optional one-shot helpers:
+
+```powershell
+# Full resync of all 3-2-1 emails
+.venv\Scripts\python.exe sync_james_clear_quotes.py --full
+
+# Only emails not already in the DB
+.venv\Scripts\python.exe sync_james_clear_quotes.py --new-only
+
+# Newest 10 emails only
+.venv\Scripts\python.exe sync_james_clear_quotes.py --limit 10
+```
+
+If IMAP sync fails, the digest still sends using the existing DB (or ZenQuotes / local fallback).
+
+### Friday sync (Windows Task Scheduler)
+
+```powershell
+cd C:\SB\MCP
+powershell -ExecutionPolicy Bypass -File scripts\register_james_clear_friday_task.ps1
+```
+
+This creates task `JamesClear321FridaySync` at **8:00 AM every Friday**. Test with:
+
+```powershell
+schtasks /Run /TN JamesClear321FridaySync
+```
+
+Cloud: see [`.github/workflows/friday-james-clear-sync.yml`](.github/workflows/friday-james-clear-sync.yml) (`30 2 * * 5` UTC = Friday 8:00 AM IST). Requires `SMTP_PASS` (same Gmail App Password; used for IMAP).
 
 ### 3. Register MCP in Cursor
 
@@ -153,10 +218,16 @@ server.py              # FastMCP tools
 weather.py             # Open-Meteo client
 formatter.py           # Text/HTML/Markdown formatting
 emailer.py             # SendGrid delivery
+quotes.py              # Quote picker (James Clear DB → ZenQuotes → fallback)
+james_clear.py         # IMAP fetch + parse 3-2-1 ideas/quotes/questions
+sync_james_clear_quotes.py  # CLI: full / new-only / limit sync
+watch_james_clear_quotes.py # Poll IMAP for new 3-2-1 emails
 send_daily_digest.py   # Scheduler entry point
 config.py              # Cities and env loading
+data/james_clear_quotes.json  # Local quote + question database
 examples/run_tests.py  # Smoke tests
 scripts/register_scheduled_task.ps1
+scripts/register_james_clear_friday_task.ps1
 logs/digest.log        # Runtime log (created on first run)
 ```
 

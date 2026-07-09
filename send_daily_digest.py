@@ -9,6 +9,7 @@ from datetime import datetime
 from config import DEFAULT_CITIES, ensure_log_dir, get_digest_timezone, is_whatsapp_enabled
 from emailer import send_weather_email
 from formatter import format_report_markdown
+from james_clear import sync_james_clear_quotes
 from weather import build_weather_report
 from whatsapp import send_weather_whatsapp
 
@@ -30,6 +31,26 @@ def setup_logging() -> logging.Logger:
 def main() -> int:
     logger = setup_logging()
     logger.info("Starting daily weather digest")
+
+    try:
+        # Pull any new 3-2-1 emails since last run (ideas + quotes + questions).
+        quote_sync = sync_james_clear_quotes(only_new=True)
+        logger.info(
+            "James Clear sync (%s): emails=%s ideas=%s quotes=%s questions=%s "
+            "added=%s quote_total=%s question_total=%s",
+            quote_sync.get("mode"),
+            quote_sync.get("emails_scanned"),
+            quote_sync.get("ideas_extracted"),
+            quote_sync.get("quotes_extracted"),
+            quote_sync.get("questions_extracted"),
+            quote_sync.get("entries_added"),
+            quote_sync.get("quotes_total"),
+            quote_sync.get("questions_total"),
+        )
+    except Exception:
+        logger.exception(
+            "James Clear quote sync failed; continuing with existing/local quotes"
+        )
 
     try:
         report = build_weather_report(DEFAULT_CITIES, get_digest_timezone())

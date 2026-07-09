@@ -1,4 +1,4 @@
-"""Fetch a fresh random inspirational quote from the internet each time."""
+"""Fetch a fresh inspirational quote — prefer James Clear 3-2-1 ideas, else ZenQuotes."""
 
 from __future__ import annotations
 
@@ -7,6 +7,8 @@ import time
 from dataclasses import dataclass
 
 import httpx
+
+from james_clear import list_stored_quotes
 
 # ZenQuotes /api/today is the same all day — use /api/random only.
 ZENQUOTES_RANDOM_URL = "https://zenquotes.io/api/random"
@@ -43,8 +45,26 @@ def _parse_zenquotes(data: object) -> Quote | None:
     return Quote(text=text, author=author, source="ZenQuotes")
 
 
+def _quote_from_james_clear() -> Quote | None:
+    # Prefer ideas + quotes-from-others for the digest inspiration line.
+    stored = list_stored_quotes(kinds={"idea", "quote"})
+    if not stored:
+        return None
+    pick = random.choice(stored)
+    label = pick.source
+    if pick.kind == "quote":
+        label = f"{pick.source} (quote)"
+    elif pick.kind == "idea":
+        label = f"{pick.source} (idea)"
+    return Quote(text=pick.text, author=pick.author, source=label)
+
+
 def fetch_live_quote() -> Quote:
-    """Fetch a new random quote on every call (ZenQuotes only + local fallback)."""
+    """Prefer James Clear DB entries; else ZenQuotes; else local fallback."""
+    local = _quote_from_james_clear()
+    if local:
+        return local
+
     bust = str(int(time.time() * 1000))
     try:
         with httpx.Client(timeout=15.0, headers={"Cache-Control": "no-cache"}) as client:

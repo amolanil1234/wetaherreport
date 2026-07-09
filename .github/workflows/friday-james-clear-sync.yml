@@ -1,0 +1,55 @@
+name: Friday James Clear 3-2-1 Sync
+
+on:
+  schedule:
+    # Friday 08:00 IST = 02:30 UTC
+    - cron: "30 2 * * 5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Sync James Clear 3-2-1 emails
+        env:
+          EMAIL_PROVIDER: gmail
+          SMTP_HOST: smtp.gmail.com
+          SMTP_PORT: "587"
+          SMTP_SECURE: "false"
+          SMTP_USER: ${{ secrets.SMTP_USER || 'amol.eng@gmail.com' }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          IMAP_HOST: imap.gmail.com
+          IMAP_PORT: "993"
+          DIGEST_TIMEZONE: Asia/Kolkata
+        run: |
+          if [ -z "$SMTP_PASS" ]; then
+            echo "ERROR: Repository secret SMTP_PASS is missing or empty."
+            echo "Add it at: Settings → Secrets and variables → Actions"
+            exit 1
+          fi
+          python sync_james_clear_quotes.py --full
+
+      - name: Commit updated quote database
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/james_clear_quotes.json
+          if git diff --staged --quiet; then
+            echo "No quote DB changes to commit."
+          else
+            git commit -m "chore: sync James Clear 3-2-1 quotes (Friday)"
+            git push
+          fi
