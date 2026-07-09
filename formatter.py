@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 from datetime import datetime
+from html import escape
 
 from config import OPEN_METEO_ATTRIBUTION
-from quotes import Quote, fetch_live_quote
+from quotes import DigestInspiration, fetch_digest_inspiration
 from weather import CityWeather, CurrentConditions, DailyForecast, WeatherReport
 
 
@@ -80,44 +81,78 @@ def format_city_text(city: CityWeather) -> str:
     return "\n".join(lines)
 
 
-def _quote_block_text(quote: Quote) -> list[str]:
-    return [
-        f'"{quote.text}"',
-        f"— {quote.author}",
-        "",
-    ]
+def _inspiration_text(inspiration: DigestInspiration | None) -> list[str]:
+    if not inspiration:
+        return []
+    lines: list[str] = ["3 Ideas From Me", ""]
+    if inspiration.subject:
+        lines.append(inspiration.subject)
+        lines.append("")
+    for index, idea in enumerate(inspiration.ideas, start=1):
+        lines.append(f"{index}. {idea}")
+        lines.append("")
+    if inspiration.question:
+        lines.append("1 Question For You")
+        lines.append("")
+        lines.append(inspiration.question)
+        lines.append("")
+    return lines
 
 
-def _quote_block_html(quote: Quote) -> str:
+def _inspiration_html(inspiration: DigestInspiration | None) -> str:
+    if not inspiration:
+        return ""
+    idea_items = "".join(
+        f"<li style=\"margin:0 0 12px 0;line-height:1.5;\">{escape(idea)}</li>"
+        for idea in inspiration.ideas
+    )
+    subject = (
+        f'<p style="margin:0 0 12px 0;font-size:13px;color:#555;">{escape(inspiration.subject)}</p>'
+        if inspiration.subject
+        else ""
+    )
+    question_block = ""
+    if inspiration.question:
+        question_block = f"""
+        <p style="margin:18px 0 8px 0;font-size:16px;font-weight:700;color:#0b6e4f;">
+          1 Question For You
+        </p>
+        <p style="margin:0;font-size:15px;line-height:1.5;">
+          {escape(inspiration.question)}
+        </p>
+        """
     return f"""
     <div style="margin:20px 0;padding:16px 20px;border-left:4px solid #0b6e4f;background:#f3faf7;">
-      <p style="margin:0;font-size:16px;font-style:italic;line-height:1.5;">
-        &ldquo;{quote.text}&rdquo;
+      <p style="margin:0 0 8px 0;font-size:18px;font-weight:700;color:#0b6e4f;">
+        3 Ideas From Me
       </p>
-      <p style="margin:10px 0 0 0;font-size:14px;color:#444;">
-        — <strong>{quote.author}</strong>
-      </p>
+      {subject}
+      <ol style="margin:0;padding-left:20px;">
+        {idea_items}
+      </ol>
+      {question_block}
     </div>
     """
 
 
-def format_report_text(report: WeatherReport, quote: Quote | None = None) -> str:
-    quote = quote or fetch_live_quote()
+def format_report_text(
+    report: WeatherReport,
+    inspiration: DigestInspiration | None = None,
+) -> str:
+    inspiration = inspiration if inspiration is not None else fetch_digest_inspiration()
     sections = [
         "Daily Weather Digest",
         f"Generated: {report.generated_at}",
         f"Timezone: {report.timezone}",
         "",
-        *_quote_block_text(quote),
+        *_inspiration_text(inspiration),
     ]
     for city in report.cities:
         sections.append(format_city_text(city))
         sections.append("")
     sections.append(OPEN_METEO_ATTRIBUTION)
-    if "James Clear" in quote.source:
-        sections.append("Quote from James Clear's 3-2-1 newsletter")
-    elif quote.source == "ZenQuotes":
-        sections.append("Inspirational quotes provided by https://zenquotes.io/")
+    if inspiration:
+        sections.append("From James Clear's 3-2-1 newsletter")
     return "\n".join(sections).strip()
 
 
@@ -179,23 +214,19 @@ def _city_html_block(city: CityWeather) -> str:
     return f"<h2>{city.city_name}</h2>{location}{current_rows}{daily_rows}"
 
 
-def format_report_html(report: WeatherReport, quote: Quote | None = None) -> str:
-    quote = quote or fetch_live_quote()
+def format_report_html(
+    report: WeatherReport,
+    inspiration: DigestInspiration | None = None,
+) -> str:
+    inspiration = inspiration if inspiration is not None else fetch_digest_inspiration()
     city_blocks = "".join(_city_html_block(city) for city in report.cities)
     quote_attr = ""
-    if "James Clear" in quote.source:
+    if inspiration:
         quote_attr = (
             '<p style="margin-top:8px;font-size:11px;color:#888;">'
-            "Quote from "
+            "From "
             '<a href="https://jamesclear.com/3-2-1" target="_blank">'
             "James Clear's 3-2-1 newsletter</a>"
-            "</p>"
-        )
-    elif quote.source == "ZenQuotes":
-        quote_attr = (
-            '<p style="margin-top:8px;font-size:11px;color:#888;">'
-            "Inspirational quotes provided by "
-            '<a href="https://zenquotes.io/" target="_blank">ZenQuotes API</a>'
             "</p>"
         )
     return f"""
@@ -204,7 +235,7 @@ def format_report_html(report: WeatherReport, quote: Quote | None = None) -> str
         <h1>Daily Weather Digest</h1>
         <p><strong>Generated:</strong> {report.generated_at}<br/>
            <strong>Timezone:</strong> {report.timezone}</p>
-        {_quote_block_html(quote)}
+        {_inspiration_html(inspiration)}
         {city_blocks}
         <p style="margin-top:24px;font-size:12px;color:#666;">
           <a href="https://open-meteo.com/">{OPEN_METEO_ATTRIBUTION}</a>
@@ -215,18 +246,33 @@ def format_report_html(report: WeatherReport, quote: Quote | None = None) -> str
     """.strip()
 
 
-def format_report_markdown(report: WeatherReport, quote: Quote | None = None) -> str:
-    quote = quote or fetch_live_quote()
+def format_report_markdown(
+    report: WeatherReport,
+    inspiration: DigestInspiration | None = None,
+) -> str:
+    inspiration = inspiration if inspiration is not None else fetch_digest_inspiration()
     lines = [
         "# Daily Weather Digest",
         "",
         f"**Generated:** {report.generated_at}",
         f"**Timezone:** {report.timezone}",
         "",
-        f'> "{quote.text}"',
-        f"> — {quote.author}",
-        "",
     ]
+    if inspiration:
+        lines.append("## 3 Ideas From Me")
+        lines.append("")
+        if inspiration.subject:
+            lines.append(f"*{inspiration.subject}*")
+            lines.append("")
+        for index, idea in enumerate(inspiration.ideas, start=1):
+            lines.append(f"{index}. {idea}")
+            lines.append("")
+        if inspiration.question:
+            lines.append("## 1 Question For You")
+            lines.append("")
+            lines.append(inspiration.question)
+            lines.append("")
+
     for city in report.cities:
         lines.append(f"## {city.city_name}")
         if city.error:
@@ -271,8 +317,6 @@ def format_report_markdown(report: WeatherReport, quote: Quote | None = None) ->
         lines.append("")
 
     lines.append(f"*{OPEN_METEO_ATTRIBUTION}*")
-    if "James Clear" in quote.source:
-        lines.append("*Quote from James Clear's 3-2-1 newsletter*")
-    elif quote.source == "ZenQuotes":
-        lines.append("*Inspirational quotes provided by https://zenquotes.io/*")
+    if inspiration:
+        lines.append("*From James Clear's 3-2-1 newsletter*")
     return "\n".join(lines)

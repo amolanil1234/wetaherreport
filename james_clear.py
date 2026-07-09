@@ -716,6 +716,56 @@ def list_stored_questions(path: Path | None = None) -> list[StoredQuote]:
     return list_stored_quotes(path, kinds={"question"})
 
 
+@dataclass(frozen=True)
+class Latest321Issue:
+    email_subject: str
+    email_date: str
+    message_id: str
+    ideas: tuple[StoredQuote, ...]
+    question: StoredQuote | None
+
+
+def get_latest_321_issue(path: Path | None = None) -> Latest321Issue | None:
+    """
+    Return the newest synced 3-2-1 issue with its 3 ideas and 1 question.
+    """
+    ideas = list_stored_quotes(path, kinds={"idea"})
+    questions = list_stored_questions(path)
+    if not ideas and not questions:
+        return None
+
+    # Newest message_id by email_date.
+    candidates = ideas + questions
+    newest_date = max(str(item.email_date or "") for item in candidates)
+    newest_items = [item for item in candidates if item.email_date == newest_date]
+    message_id = newest_items[0].message_id if newest_items else ""
+    if not message_id:
+        return None
+
+    issue_ideas = tuple(
+        sorted(
+            (item for item in ideas if item.message_id == message_id),
+            key=lambda item: item.idea_index,
+        )
+    )
+    issue_question = next(
+        (item for item in questions if item.message_id == message_id),
+        None,
+    )
+    subject = (
+        issue_ideas[0].email_subject
+        if issue_ideas
+        else (issue_question.email_subject if issue_question else "")
+    )
+    return Latest321Issue(
+        email_subject=subject,
+        email_date=newest_date,
+        message_id=message_id,
+        ideas=issue_ideas,
+        question=issue_question,
+    )
+
+
 def watch_james_clear_inbox(poll_seconds: int = 300) -> None:
     """Poll IMAP forever and merge any new 3-2-1 emails into the DB."""
     poll_seconds = max(60, poll_seconds)
