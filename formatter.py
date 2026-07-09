@@ -87,15 +87,58 @@ def _cities_comparison_text(cities: list[CityWeather]) -> list[str]:
     return lines
 
 
+_ROMAN = ("I", "II", "III", "IV", "V")
+
+
+def _idea_paragraphs(text: str) -> list[str]:
+    """Split a long idea into reading-page paragraphs."""
+    cleaned = " ".join(text.split())
+    if not cleaned:
+        return []
+    sentences = [
+        s.strip()
+        for s in cleaned.replace("? ", "?|").replace(". ", ".|").split("|")
+        if s.strip()
+    ]
+    if len(sentences) <= 2:
+        return [cleaned]
+    paragraphs: list[str] = []
+    bucket: list[str] = []
+    for sentence in sentences:
+        bucket.append(sentence)
+        joined = " ".join(bucket)
+        # Keep paragraphs long enough to read like the newsletter.
+        if len(joined) >= 280 or len(bucket) >= 3:
+            paragraphs.append(joined)
+            bucket = []
+    if bucket:
+        if paragraphs and len(" ".join(bucket)) < 80:
+            paragraphs[-1] = f"{paragraphs[-1]} {' '.join(bucket)}"
+        else:
+            paragraphs.append(" ".join(bucket))
+    return paragraphs or [cleaned]
+
+
 def _inspiration_text(inspiration: DigestInspiration | None) -> list[str]:
     if not inspiration:
         return []
-    lines: list[str] = ["3 ideas from James Clear", ""]
+    lines: list[str] = ["3 Ideas From Me", ""]
     if inspiration.subject:
         lines.append(inspiration.subject)
         lines.append("")
-    for index, idea in enumerate(inspiration.ideas, start=1):
-        lines.append(f"{index}. {idea}")
+    for index, idea in enumerate(inspiration.ideas):
+        roman = _ROMAN[index] if index < len(_ROMAN) else str(index + 1)
+        lines.append(f"{roman}.")
+        lines.append("")
+        paragraphs = _idea_paragraphs(idea)
+        lines.append(f'"{paragraphs[0]}')
+        for paragraph in paragraphs[1:]:
+            lines.append("")
+            lines.append(paragraph)
+        if lines[-1].endswith('"'):
+            pass
+        else:
+            lines[-1] = f'{lines[-1]}"'
         lines.append("")
     if inspiration.question:
         lines.append("1 Question For You")
@@ -108,13 +151,34 @@ def _inspiration_text(inspiration: DigestInspiration | None) -> list[str]:
 def _inspiration_html(inspiration: DigestInspiration | None) -> str:
     if not inspiration:
         return ""
-    body_style = "margin:0 0 12px 0;font-size:15px;font-weight:400;line-height:1.5;color:#222;"
-    heading_style = "margin:0 0 8px 0;font-size:18px;font-weight:700;color:#0b6e4f;"
-    idea_items = "".join(
-        f'<li style="{body_style}">{escape(idea)}</li>' for idea in inspiration.ideas
-    )
+
+    idea_blocks: list[str] = []
+    for index, idea in enumerate(inspiration.ideas):
+        roman = _ROMAN[index] if index < len(_ROMAN) else str(index + 1)
+        paragraphs = _idea_paragraphs(idea)
+        para_html: list[str] = []
+        for i, paragraph in enumerate(paragraphs):
+            prefix = "&ldquo;" if i == 0 else ""
+            suffix = "&rdquo;" if i == len(paragraphs) - 1 else ""
+            para_html.append(
+                f'<p style="margin:0 0 16px 0;font-size:17px;line-height:1.75;color:#222;">'
+                f"{prefix}{escape(paragraph)}{suffix}</p>"
+            )
+        idea_blocks.append(
+            f"""
+            <div style="margin:0 0 40px 0;text-align:center;">
+              <p style="margin:0 0 16px 0;font-size:16px;font-weight:700;letter-spacing:0.05em;color:#111;">
+                {roman}.
+              </p>
+              <div style="margin:0 auto;max-width:540px;font-style:italic;">
+                {"".join(para_html)}
+              </div>
+            </div>
+            """
+        )
+
     subject = (
-        f'<p style="margin:0 0 12px 0;font-size:13px;font-weight:400;color:#555;line-height:1.4;">'
+        f'<p style="margin:8px 0 28px 0;font-size:13px;color:#666;text-align:center;">'
         f"{escape(inspiration.subject)}</p>"
         if inspiration.subject
         else ""
@@ -122,22 +186,25 @@ def _inspiration_html(inspiration: DigestInspiration | None) -> str:
     question_block = ""
     if inspiration.question:
         question_block = f"""
-        <p style="{heading_style} margin-top:18px;">
-          1 Question For You
-        </p>
-        <p style="{body_style} margin-bottom:0;">
-          {escape(inspiration.question)}
-        </p>
+        <div style="margin:8px auto 0 auto;max-width:540px;text-align:center;">
+          <p style="margin:0 0 14px 0;font-size:18px;font-weight:700;color:#111;">
+            1 Question For You
+          </p>
+          <p style="margin:0;font-size:17px;line-height:1.75;color:#222;font-style:italic;">
+            {escape(inspiration.question)}
+          </p>
+        </div>
         """
+
     return f"""
-    <div style="margin:20px 0;padding:16px 20px;border-left:4px solid #0b6e4f;background:#f3faf7;font-family:Segoe UI,Arial,sans-serif;">
-      <p style="{heading_style}">
-        3 ideas from James Clear
+    <div style="margin:28px auto;padding:28px 24px;max-width:640px;background:#fafafa;
+                border:1px solid #ececec;font-family:Georgia,'Times New Roman',serif;">
+      <p style="margin:0 0 6px 0;font-size:22px;font-weight:700;text-align:center;
+                font-family:Segoe UI,Arial,sans-serif;color:#111;">
+        3 Ideas From Me
       </p>
       {subject}
-      <ol style="margin:0;padding-left:20px;font-size:15px;color:#222;">
-        {idea_items}
-      </ol>
+      {"".join(idea_blocks)}
       {question_block}
     </div>
     """
@@ -229,18 +296,25 @@ def format_report_markdown(
         "",
     ]
     if inspiration:
-        lines.append("## 3 ideas from James Clear")
+        lines.append("## 3 Ideas From Me")
         lines.append("")
         if inspiration.subject:
             lines.append(f"*{inspiration.subject}*")
             lines.append("")
-        for index, idea in enumerate(inspiration.ideas, start=1):
-            lines.append(f"{index}. {idea}")
+        for index, idea in enumerate(inspiration.ideas):
+            roman = _ROMAN[index] if index < len(_ROMAN) else str(index + 1)
+            lines.append(f"**{roman}.**")
             lines.append("")
+            paragraphs = _idea_paragraphs(idea)
+            for i, paragraph in enumerate(paragraphs):
+                prefix = '"' if i == 0 else ""
+                suffix = '"' if i == len(paragraphs) - 1 else ""
+                lines.append(f"> {prefix}{paragraph}{suffix}")
+                lines.append("")
         if inspiration.question:
             lines.append("## 1 Question For You")
             lines.append("")
-            lines.append(inspiration.question)
+            lines.append(f"> {inspiration.question}")
             lines.append("")
 
     lines.append("## Current weather")
