@@ -122,7 +122,7 @@ def _idea_paragraphs(text: str) -> list[str]:
 def _inspiration_text(inspiration: DigestInspiration | None) -> list[str]:
     if not inspiration:
         return []
-    lines: list[str] = ["3 Ideas From Me", ""]
+    lines: list[str] = ["3 ideas from James Clear", ""]
     if inspiration.subject:
         lines.append(inspiration.subject)
         lines.append("")
@@ -170,7 +170,7 @@ def _inspiration_html(inspiration: DigestInspiration | None) -> str:
               <p style="margin:0 0 16px 0;font-size:16px;font-weight:700;letter-spacing:0.05em;color:#111;">
                 {roman}.
               </p>
-              <div style="margin:0 auto;max-width:540px;font-style:italic;">
+              <div style="margin:0 auto;max-width:540px;">
                 {"".join(para_html)}
               </div>
             </div>
@@ -190,7 +190,7 @@ def _inspiration_html(inspiration: DigestInspiration | None) -> str:
           <p style="margin:0 0 14px 0;font-size:18px;font-weight:700;color:#111;">
             1 Question For You
           </p>
-          <p style="margin:0;font-size:17px;line-height:1.75;color:#222;font-style:italic;">
+          <p style="margin:0;font-size:17px;line-height:1.75;color:#222;">
             {escape(inspiration.question)}
           </p>
         </div>
@@ -201,7 +201,7 @@ def _inspiration_html(inspiration: DigestInspiration | None) -> str:
                 border:1px solid #ececec;font-family:Georgia,'Times New Roman',serif;">
       <p style="margin:0 0 6px 0;font-size:22px;font-weight:700;text-align:center;
                 font-family:Segoe UI,Arial,sans-serif;color:#111;">
-        3 Ideas From Me
+        3 ideas from James Clear
       </p>
       {subject}
       {"".join(idea_blocks)}
@@ -296,7 +296,7 @@ def format_report_markdown(
         "",
     ]
     if inspiration:
-        lines.append("## 3 Ideas From Me")
+        lines.append("## 3 ideas from James Clear")
         lines.append("")
         if inspiration.subject:
             lines.append(f"*{inspiration.subject}*")
