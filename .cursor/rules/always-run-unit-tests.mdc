@@ -1,0 +1,16 @@
+---
+description: Always run unit tests after every code change
+alwaysApply: true
+---
+
+# Always run unit tests after changes
+
+After any code change in this repo, run the unit tests before finishing:
+
+```powershell
+python tests/test_digest_checkin.py
+```
+
+- Do this automatically — do not wait for the user to ask.
+- Fix failures before considering the change done.
+- Only use `--live` when the user explicitly wants a real email sent.

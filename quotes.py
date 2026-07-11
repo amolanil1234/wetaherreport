@@ -22,8 +22,8 @@ def fetch_digest_inspiration(*, mark_used: bool = True) -> DigestInspiration | N
     """
     Return the next unused 3-2-1 issue (3 ideas + 1 question).
 
-    Marks the issue as used so the next digest gets a different set.
-    After all issues are used once, rotation starts over.
+    Marks the issue as used (web + email IDs) so the next digest gets a
+    different set. After all issues are used once, rotation starts over.
     """
     issue: Latest321Issue | None = pick_next_321_issue(mark_used=mark_used)
     if not issue:

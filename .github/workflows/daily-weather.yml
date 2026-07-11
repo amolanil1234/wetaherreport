@@ -2,9 +2,12 @@ name: Daily Weather Digest
 
 on:
   schedule:
-    # 07:00 IST = 01:30 UTC
-    - cron: "30 1 * * *"
+    # 10:00 IST = 04:30 UTC
+    - cron: "30 4 * * *"
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   digest:
@@ -39,3 +42,15 @@ jobs:
             exit 1
           fi
           python send_daily_digest.py
+
+      - name: Persist James Clear used-issue state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/james_clear_quotes.json
+          if git diff --staged --quiet; then
+            echo "No quote DB changes to commit."
+          else
+            git commit -m "chore: mark James Clear 3-2-1 issue used in daily digest"
+            git push
+          fi

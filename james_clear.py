@@ -972,7 +972,7 @@ def list_321_issues(path: Path | None = None) -> list[Latest321Issue]:
         issue = _issue_from_message_id(message_id, ideas, questions)
         if not issue:
             continue
-        key = f"{issue.email_date[:10]}|{issue.email_subject.lower().strip()}"
+        key = _issue_identity_key(issue.email_date, issue.email_subject)
         if key in seen_keys:
             continue
         seen_keys.add(key)
@@ -980,20 +980,74 @@ def list_321_issues(path: Path | None = None) -> list[Latest321Issue]:
     return issues
 
 
+def _issue_identity_key(email_date: str, email_subject: str) -> str:
+    """Stable key so web + email copies of the same 3-2-1 issue match."""
+    return f"{(email_date or '')[:10]}|{(email_subject or '').lower().strip()}"
+
+
+def _related_message_ids_for_issue(
+    issue: Latest321Issue,
+    path: Path | None = None,
+) -> set[str]:
+    """All stored message_ids for the same calendar issue (web URL + email id)."""
+    key = _issue_identity_key(issue.email_date, issue.email_subject)
+    related: set[str] = set()
+    if issue.message_id:
+        related.add(issue.message_id)
+    for item in list_stored_quotes(path, kinds={"idea", "quote", "question"}):
+        if not item.message_id:
+            continue
+        if _issue_identity_key(item.email_date, item.email_subject) == key:
+            related.add(item.message_id)
+    return related
+
+
 def get_used_digest_message_ids(path: Path | None = None) -> set[str]:
     db = load_quote_db(path)
     return {str(item) for item in db.get("used_in_digest_message_ids") or []}
 
 
+def _used_issue_keys(path: Path | None = None) -> set[str]:
+    """
+    Issue identity keys already shown in digests.
+
+    Used list may contain either web URLs or ConvertKit Message-IDs; both
+    map to the same date|subject key so we never re-send the same issue.
+    """
+    used_ids = get_used_digest_message_ids(path)
+    if not used_ids:
+        return set()
+    keys: set[str] = set()
+    for item in list_stored_quotes(path, kinds={"idea", "quote", "question"}):
+        if item.message_id and item.message_id in used_ids:
+            keys.add(_issue_identity_key(item.email_date, item.email_subject))
+    return keys
+
+
 def mark_issue_used_in_digest(message_id: str, path: Path | None = None) -> None:
     if not message_id:
         return
+    # Expand to every stored ID for this issue (web + email) so future picks
+    # skip it even when list_321_issues prefers a different message_id.
+    ideas = list_stored_quotes(path, kinds={"idea"})
+    questions = list_stored_questions(path)
+    issue = _issue_from_message_id(message_id, ideas, questions)
+    related = (
+        _related_message_ids_for_issue(issue, path)
+        if issue
+        else {message_id}
+    )
+
     db = load_quote_db(path)
     used = [str(item) for item in db.get("used_in_digest_message_ids") or []]
-    if message_id not in used:
-        used.append(message_id)
-    db["used_in_digest_message_ids"] = used
-    save_quote_db(db, path)
+    changed = False
+    for mid in sorted(related):
+        if mid not in used:
+            used.append(mid)
+            changed = True
+    if changed:
+        db["used_in_digest_message_ids"] = used
+        save_quote_db(db, path)
 
 
 def reset_used_digest_message_ids(path: Path | None = None) -> None:
@@ -1016,6 +1070,7 @@ def pick_next_321_issue(
     """
     Pick the next unused 3-2-1 issue (newest unused first).
 
+    Web and email copies of the same newsletter count as one issue.
     Once every issue has been used in a digest, the used list resets and
     rotation starts over so digests never get stuck empty.
     """
@@ -1023,8 +1078,12 @@ def pick_next_321_issue(
     if not issues:
         return None
 
-    used = get_used_digest_message_ids(path)
-    unused = [issue for issue in issues if issue.message_id not in used]
+    used_keys = _used_issue_keys(path)
+    unused = [
+        issue
+        for issue in issues
+        if _issue_identity_key(issue.email_date, issue.email_subject) not in used_keys
+    ]
     if not unused:
         reset_used_digest_message_ids(path)
         unused = issues

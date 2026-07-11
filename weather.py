@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 import httpx
@@ -158,13 +158,19 @@ def geocode_city(name: str, country_code: str = "IN") -> Coordinates:
     )
 
 
-def fetch_forecast(coords: Coordinates) -> tuple[CurrentConditions, list[DailyForecast]]:
+def fetch_forecast(
+    coords: Coordinates,
+    *,
+    timezone_name: str | None = None,
+) -> tuple[CurrentConditions, list[DailyForecast]]:
+    tz = timezone_name or get_digest_timezone()
     data = _request_json(
         FORECAST_API_URL,
         {
             "latitude": coords.latitude,
             "longitude": coords.longitude,
-            "timezone": coords.timezone,
+            # Always request times in digest timezone (Asia/Kolkata / IST).
+            "timezone": tz,
             "current": [
                 "temperature_2m",
                 "apparent_temperature",
@@ -231,11 +237,15 @@ def _safe_index(values: list[Any] | None, index: int) -> Any | None:
     return values[index]
 
 
-def fetch_city_weather(city: CityConfig) -> CityWeather:
+def fetch_city_weather(
+    city: CityConfig,
+    *,
+    timezone_name: str | None = None,
+) -> CityWeather:
     result = CityWeather(city_name=city.name)
     try:
         coords = geocode_city(city.name, city.country_code)
-        current, daily = fetch_forecast(coords)
+        current, daily = fetch_forecast(coords, timezone_name=timezone_name)
         result.coordinates = coords
         result.current = current
         result.daily = daily
@@ -244,15 +254,27 @@ def fetch_city_weather(city: CityConfig) -> CityWeather:
     return result
 
 
+def _generated_at_ist() -> str:
+    """Header timestamp always in India Standard Time, e.g. ``11 Jul 2026, 6:05pm IST``."""
+    ist = timezone(timedelta(hours=5, minutes=30), name="IST")
+    dt = datetime.now(tz=ist)
+    hour_12 = dt.hour % 12 or 12
+    ampm = "am" if dt.hour < 12 else "pm"
+    clock = f"{hour_12}{ampm}" if dt.minute == 0 else f"{hour_12}:{dt.minute:02d}{ampm}"
+    return f"{dt.strftime('%d %b %Y')}, {clock} IST"
+
+
 def build_weather_report(
     cities: tuple[CityConfig, ...] | None = None,
     timezone: str | None = None,
 ) -> WeatherReport:
     tz = timezone or get_digest_timezone()
     city_list = cities or DEFAULT_CITIES
-    city_results = [fetch_city_weather(city) for city in city_list]
+    city_results = [
+        fetch_city_weather(city, timezone_name=tz) for city in city_list
+    ]
     return WeatherReport(
-        generated_at=datetime.now().astimezone().strftime("%Y-%m-%d %H:%M %Z"),
+        generated_at=_generated_at_ist(),
         timezone=tz,
         cities=city_results,
     )

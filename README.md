@@ -127,6 +127,16 @@ Check `logs\digest.log` for run history.
 .venv\Scripts\python.exe examples\run_tests.py
 ```
 
+### Pre-check-in tests (James Clear rotation + optional live email)
+
+```powershell
+# Fast unit tests — proves each digest picks a *different* unused 3-2-1 issue
+.venv\Scripts\python.exe tests\test_digest_checkin.py
+
+# Same tests + send one real digest to your inbox
+.venv\Scripts\python.exe tests\test_digest_checkin.py --live
+```
+
 To send a live test email during smoke tests:
 
 ```env
@@ -187,6 +197,7 @@ send_daily_digest.py   # Scheduler entry point
 config.py              # Cities and env loading
 data/james_clear_quotes.json  # Local quote + question database
 examples/run_tests.py  # Smoke tests
+tests/test_digest_checkin.py  # Pre-check-in: rotation unit tests + optional live email
 scripts/register_scheduled_task.ps1
 scripts/register_james_clear_friday_task.ps1
 logs/digest.log        # Runtime log (created on first run)

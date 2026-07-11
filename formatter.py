@@ -2,11 +2,58 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from html import escape
 
 from quotes import DigestInspiration, fetch_digest_inspiration
 from weather import CityWeather, CurrentConditions, WeatherReport
+
+# India Standard Time (no DST) — always use this for Observed at / Generated.
+IST = timezone(timedelta(hours=5, minutes=30), name="IST")
+
+
+def format_ist_clock(value: str | datetime | None) -> str:
+    """
+    Format a timestamp as Indian local time, e.g. ``9am IST`` or ``9:30am IST``.
+    """
+    if value is None or value == "":
+        return "N/A"
+
+    if isinstance(value, datetime):
+        dt = value
+    else:
+        text = str(value).strip()
+        try:
+            # Open-Meteo: "2026-07-11T18:00" (local) or with offset/Z.
+            if text.endswith("Z"):
+                text = text[:-1] + "+00:00"
+            dt = datetime.fromisoformat(text)
+        except ValueError:
+            return str(value)
+
+    if dt.tzinfo is None:
+        # Treat naive times from Open-Meteo (requested in Asia/Kolkata) as IST.
+        dt = dt.replace(tzinfo=IST)
+    else:
+        dt = dt.astimezone(IST)
+
+    hour_12 = dt.hour % 12 or 12
+    ampm = "am" if dt.hour < 12 else "pm"
+    if dt.minute == 0:
+        return f"{hour_12}{ampm} IST"
+    return f"{hour_12}:{dt.minute:02d}{ampm} IST"
+
+
+def format_generated_at_ist(when: datetime | None = None) -> str:
+    """Header timestamp, e.g. ``11 Jul 2026, 6:05pm IST``."""
+    dt = (when or datetime.now(tz=IST)).astimezone(IST)
+    hour_12 = dt.hour % 12 or 12
+    ampm = "am" if dt.hour < 12 else "pm"
+    if dt.minute == 0:
+        clock = f"{hour_12}{ampm}"
+    else:
+        clock = f"{hour_12}:{dt.minute:02d}{ampm}"
+    return f"{dt.strftime('%d %b %Y')}, {clock} IST"
 
 
 def _format_number(value: float | None, suffix: str = "") -> str:
@@ -25,7 +72,7 @@ def _format_wind(speed: float | None, direction: float | None) -> str:
 
 
 def build_email_subject(report: WeatherReport) -> str:
-    date_label = datetime.now().strftime("%d %b %Y")
+    date_label = datetime.now(tz=IST).strftime("%d %b %Y")
     city_names = ", ".join(city.city_name for city in report.cities)
     return f"Daily Weather — {city_names} — {date_label}"
 
@@ -56,7 +103,7 @@ def _city_metric_value(city: CityWeather, key: str) -> str:
     if key == "cloud":
         return _format_number(current.cloud_cover_percent, "%")
     if key == "observed":
-        return current.observed_at or "N/A"
+        return format_ist_clock(current.observed_at)
     return "N/A"
 
 
