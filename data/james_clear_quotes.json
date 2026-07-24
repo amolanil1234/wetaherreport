@@ -1,6 +1,61 @@
 {
-  "updated_at": "2026-07-23T07:04:33.077243+00:00",
+  "updated_at": "2026-07-24T05:34:43.477516+00:00",
   "quotes": [
+    {
+      "id": "https://jamesclear.com/3-2-1/july-23-2026#quote#2",
+      "text": "I ask myself: are defeats necessary? Well, necessary or not, they happen. When we first begin fighting for a dream, we have no experience and make mistakes. The secret of life, though, is to fall seven times and to get up eight times.",
+      "author": "Novelist Paulo Coelho",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On leisure vs. luxury, unlocking growth, and the many versions of a good life",
+      "email_date": "2026-07-23T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/july-23-2026",
+      "idea_index": 2,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/july-23-2026#quote#1",
+      "text": "The enjoyment of leisure is something which decidedly costs less than the enjoyment of luxury. All it requires is an artistic temperament which is bent on seeking a perfectly useless afternoon spent in a perfectly useless manner.",
+      "author": "Lin Yutang",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On leisure vs. luxury, unlocking growth, and the many versions of a good life",
+      "email_date": "2026-07-23T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/july-23-2026",
+      "idea_index": 1,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/july-23-2026#idea#3",
+      "text": "Whether you have ten years left or a hundred years left, your life is an incredibly brief moment. We know for sure you won't be here in a century. But today? Today you are in the Great Game. And this moment you have right now might as well be the most important moment in the universe. Your time is thin. Go out and live fully now.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On leisure vs. luxury, unlocking growth, and the many versions of a good life",
+      "email_date": "2026-07-23T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/july-23-2026",
+      "idea_index": 3,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/july-23-2026#idea#2",
+      "text": "Plenty of growth can be found in removing your vices, but the real leaps are unlocked when you stop clinging to your comforts.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On leisure vs. luxury, unlocking growth, and the many versions of a good life",
+      "email_date": "2026-07-23T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/july-23-2026",
+      "idea_index": 2,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/july-23-2026#idea#1",
+      "text": "Achievements are great. It is satisfying to accomplish something. It feels good to win. And many achievements make the world a better place, too. But also remember to ask, “What am I really trying to accomplish here?” You may realize the goal is not to write a best-selling book or earn that promotion or get into medical school, but rather to build a life you enjoy. And there are many versions of a life you enjoy. It is often the case that if you can release the narrative of “I have to do this” to be happy, then a different (but equally lovely) life is waiting for you.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On leisure vs. luxury, unlocking growth, and the many versions of a good life",
+      "email_date": "2026-07-23T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/july-23-2026",
+      "idea_index": 1,
+      "kind": "idea"
+    },
     {
       "id": "https://jamesclear.com/3-2-1/july-16-2026#quote#2",
       "text": "The secret of being happy consists of knowing how to enjoy yourself—enjoy being at table, in bed, enjoy standing up, sitting down, enjoy the nearest ray of sunshine, the slightest bit of landscape: in other words, love everything.",
@@ -20794,6 +20849,17 @@
   ],
   "questions": [
     {
+      "id": "https://jamesclear.com/3-2-1/july-23-2026#question#1",
+      "text": "Challenge yourself to have one new experience this week. When everything around you is familiar, the days turn stale and slip by unnoticed. A surprising experience breathes life into tired days and makes the mind fresh again. What is one new experience you can have this week?",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On leisure vs. luxury, unlocking growth, and the many versions of a good life",
+      "email_date": "2026-07-23T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/july-23-2026",
+      "idea_index": 1,
+      "kind": "question"
+    },
+    {
       "id": "https://jamesclear.com/3-2-1/july-16-2026#question#1",
       "text": "Psychologist and author Adam Grant shares a question for sparking better conversation… When you meet someone new, don't ask: What do you do?",
       "author": "James Clear",
@@ -25160,6 +25226,7 @@
     "https://jamesclear.com/3-2-1/july-21-2022",
     "https://jamesclear.com/3-2-1/july-22-2021",
     "https://jamesclear.com/3-2-1/july-23-2020",
+    "https://jamesclear.com/3-2-1/july-23-2026",
     "https://jamesclear.com/3-2-1/july-24-2025",
     "https://jamesclear.com/3-2-1/july-25-2024",
     "https://jamesclear.com/3-2-1/july-27-2023",
