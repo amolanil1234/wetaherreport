@@ -1,6 +1,61 @@
 {
-  "updated_at": "2026-08-13T05:55:28.617675+00:00",
+  "updated_at": "2026-08-14T04:22:07.333976+00:00",
   "quotes": [
+    {
+      "id": "https://jamesclear.com/3-2-1/august-13-2026#quote#2",
+      "text": "If you do follow your bliss, you put yourself on a kind of track that has been there all the while, waiting for you, and the life that you ought to be living is the one you are living. When you can see that, you begin to meet people who are in your field of bliss, and they open doors to you. I say: follow your bliss and don’t be afraid, and doors will open where you didn’t know they were going to be.",
+      "author": "Joseph Campbell",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On the power of curiosity, winning vs. improving, and taking control of your to-do list",
+      "email_date": "2026-08-13T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-13-2026",
+      "idea_index": 2,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/august-13-2026#quote#1",
+      "text": "Whether you succeed or not is irrelevant — there is no such thing. Making your unknown known is the important thing.",
+      "author": "Keeffe",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On the power of curiosity, winning vs. improving, and taking control of your to-do list",
+      "email_date": "2026-08-13T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-13-2026",
+      "idea_index": 1,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/august-13-2026#idea#3",
+      "text": "Who is initiating the items on your to-do list? When I’m most productive, I decide what I want to create and work on the task that will help build my vision. When I am less productive, I spend my day responding to what someone else sends to me — emails, texts, etc. — and often that means I end up building someone else’s vision.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On the power of curiosity, winning vs. improving, and taking control of your to-do list",
+      "email_date": "2026-08-13T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-13-2026",
+      "idea_index": 3,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/august-13-2026#idea#2",
+      "text": "Delaying a conversation doesn’t make it easier.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On the power of curiosity, winning vs. improving, and taking control of your to-do list",
+      "email_date": "2026-08-13T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-13-2026",
+      "idea_index": 2,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/august-13-2026#idea#1",
+      "text": "Being curious and excited can take you far, especially over the long arc of a life. The person who is a voracious lifelong learner will figure it out eventually. A strong reader with a healthy dose of curiosity and a willingness to try things is hard to stop.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On the power of curiosity, winning vs. improving, and taking control of your to-do list",
+      "email_date": "2026-08-13T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-13-2026",
+      "idea_index": 1,
+      "kind": "idea"
+    },
     {
       "id": "https://jamesclear.com/3-2-1/august-6-2026#quote#2",
       "text": "Without laughter, the rough and rocky places on the path might be too painful to bear. Humor not only lightens your load, it also broadens your perspective. To be deadly serious is to suffer tunnel vision. To be able to laugh at yourself clears the vision.",
@@ -20959,6 +21014,17 @@
   ],
   "questions": [
     {
+      "id": "https://jamesclear.com/3-2-1/august-13-2026#question#1",
+      "text": "Focus less on winning, focus more on improving. What can you do today to feel like you are growing?",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On the power of curiosity, winning vs. improving, and taking control of your to-do list",
+      "email_date": "2026-08-13T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-13-2026",
+      "idea_index": 1,
+      "kind": "question"
+    },
+    {
       "id": "https://jamesclear.com/3-2-1/august-6-2026#question#1",
       "text": "Try this simple reframe from executive coach, Joe Hudson: Instead of thinking, “What’s wrong and how do I fix it?",
       "author": "James Clear",
@@ -25226,6 +25292,7 @@
     "https://jamesclear.com/3-2-1/august-11-2022",
     "https://jamesclear.com/3-2-1/august-12-2021",
     "https://jamesclear.com/3-2-1/august-13-2020",
+    "https://jamesclear.com/3-2-1/august-13-2026",
     "https://jamesclear.com/3-2-1/august-14-2025",
     "https://jamesclear.com/3-2-1/august-15-2019",
     "https://jamesclear.com/3-2-1/august-15-2024",
