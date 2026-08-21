@@ -1,6 +1,61 @@
 {
-  "updated_at": "2026-08-20T05:03:42.384125+00:00",
+  "updated_at": "2026-08-21T03:28:38.934253+00:00",
   "quotes": [
+    {
+      "id": "https://jamesclear.com/3-2-1/august-20-2026#quote#2",
+      "text": "Much of life is in learning to always remain part of the solution rather than allowing ourselves to become part of the problem.",
+      "author": "Jim Rohn",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What good judgement requires, how to direct your attention, and the hidden path to happiness",
+      "email_date": "2026-08-20T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-20-2026",
+      "idea_index": 2,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/august-20-2026#quote#1",
+      "text": "Rare are those people who use the mind; few use the heart; and really unique are those who use both.",
+      "author": "Rita Levi-Montalcini",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What good judgement requires, how to direct your attention, and the hidden path to happiness",
+      "email_date": "2026-08-20T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-20-2026",
+      "idea_index": 1,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/august-20-2026#idea#3",
+      "text": "Your life is simply your days, accumulated. Did today’s habits contribute to the life you want to build?",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What good judgement requires, how to direct your attention, and the hidden path to happiness",
+      "email_date": "2026-08-20T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-20-2026",
+      "idea_index": 3,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/august-20-2026#idea#2",
+      "text": "Everyone wants to be happy now, but it might be better to optimize for being satisfied later. Perhaps the key to happiness is to not worry about being happy today, but rather to make choices that will leave your future self feeling satisfied with how you chose to live. Do you feel a sense of satisfaction with the choices you made? With the way you lived today? With the things you chose to focus on over the last year? Are you “happy” with the impact you are making? Momentary happiness is hard to predict, but deep satisfaction is easier to control. It is on the other side of good choices, good habits, and meaningful impact.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What good judgement requires, how to direct your attention, and the hidden path to happiness",
+      "email_date": "2026-08-20T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-20-2026",
+      "idea_index": 2,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/august-20-2026#idea#1",
+      "text": "The measure of a life is not what you consume, but what you contribute. Spend less time owning, consuming, taking. Spend more time giving, creating, making.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What good judgement requires, how to direct your attention, and the hidden path to happiness",
+      "email_date": "2026-08-20T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-20-2026",
+      "idea_index": 1,
+      "kind": "idea"
+    },
     {
       "id": "https://jamesclear.com/3-2-1/august-13-2026#quote#2",
       "text": "If you do follow your bliss, you put yourself on a kind of track that has been there all the while, waiting for you, and the life that you ought to be living is the one you are living. When you can see that, you begin to meet people who are in your field of bliss, and they open doors to you. I say: follow your bliss and don’t be afraid, and doors will open where you didn’t know they were going to be.",
@@ -21014,6 +21069,17 @@
   ],
   "questions": [
     {
+      "id": "https://jamesclear.com/3-2-1/august-20-2026#question#1",
+      "text": "If the version of you from five years ago could see your life today, what would surprise them most?",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What good judgement requires, how to direct your attention, and the hidden path to happiness",
+      "email_date": "2026-08-20T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-20-2026",
+      "idea_index": 1,
+      "kind": "question"
+    },
+    {
       "id": "https://jamesclear.com/3-2-1/august-13-2026#question#1",
       "text": "Focus less on winning, focus more on improving. What can you do today to feel like you are growing?",
       "author": "James Clear",
@@ -25300,6 +25366,7 @@
     "https://jamesclear.com/3-2-1/august-18-2022",
     "https://jamesclear.com/3-2-1/august-19-2021",
     "https://jamesclear.com/3-2-1/august-20-2020",
+    "https://jamesclear.com/3-2-1/august-20-2026",
     "https://jamesclear.com/3-2-1/august-21-2025",
     "https://jamesclear.com/3-2-1/august-22-2019",
     "https://jamesclear.com/3-2-1/august-22-2024",
