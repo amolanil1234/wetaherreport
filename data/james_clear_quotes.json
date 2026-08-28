@@ -1,6 +1,61 @@
 {
-  "updated_at": "2026-08-27T15:23:20.490812+00:00",
+  "updated_at": "2026-08-28T14:28:33.754358+00:00",
   "quotes": [
+    {
+      "id": "https://jamesclear.com/3-2-1/august-27-2026#quote#2",
+      "text": "No matter how isolated you are and how lonely you feel, if you do your work truly and conscientiously, unknown friends will come and seek you.",
+      "author": "Carl Jung",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On thinking long-term, how to attract like-minded people, and one sign of mental toughness",
+      "email_date": "2026-08-27T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-27-2026",
+      "idea_index": 2,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/august-27-2026#quote#1",
+      "text": "I was born with a happy heart. I’ve always tried to let that shine even during my dark times. I’m one of those people who, even if things are not right, goes about trying to make it as right as I can rather than just lying around on my ass and wallowing in it all day. I think, “Well, I can either do this or I can do that.” I choose to get up and try to make it better if I can… Of course, I try to improve every day. If there’s a better outfit, I want to wear it. If there’s a better song, I want to write it. If there’s a better record, I want to record it. If there’s a better movie, I want to make it. I will continue to be as good as I can be. And I intend to keep coming up with new ideas all the time.",
+      "author": "Dolly Parton",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On thinking long-term, how to attract like-minded people, and one sign of mental toughness",
+      "email_date": "2026-08-27T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-27-2026",
+      "idea_index": 1,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/august-27-2026#idea#3",
+      "text": "There is no path to greatness without hard work. And the only person who feels like working hard for years is someone who is excited about the task. You only get one life and you’re going to burn the days either way, so the real question is: What excites you and interests you? What makes you feel curious and alive, perhaps even joyful? What is so “worth it” that you’re not worried about the tradeoffs, the hard work, the hassle? Follow your enthusiasm.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On thinking long-term, how to attract like-minded people, and one sign of mental toughness",
+      "email_date": "2026-08-27T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-27-2026",
+      "idea_index": 3,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/august-27-2026#idea#2",
+      "text": "One sign of mental toughness is being larger than the situation. Do the circumstances dictate your mood and emotions? Or do you choose your mood and emotions, and the situation is simply something you respond to? The less your mood depends on your circumstances, the more mentally tough you are.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On thinking long-term, how to attract like-minded people, and one sign of mental toughness",
+      "email_date": "2026-08-27T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-27-2026",
+      "idea_index": 2,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/august-27-2026#idea#1",
+      "text": "Long-term thinking changes short-term actions. Spend a little time today doing things that will benefit you in ten years.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On thinking long-term, how to attract like-minded people, and one sign of mental toughness",
+      "email_date": "2026-08-27T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-27-2026",
+      "idea_index": 1,
+      "kind": "idea"
+    },
     {
       "id": "https://jamesclear.com/3-2-1/august-20-2026#quote#2",
       "text": "Much of life is in learning to always remain part of the solution rather than allowing ourselves to become part of the problem.",
@@ -21069,6 +21124,17 @@
   ],
   "questions": [
     {
+      "id": "https://jamesclear.com/3-2-1/august-27-2026#question#1",
+      "text": "Pick one room where you spend a lot of time. What is one item in this room that you no longer use or do not benefit from?",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On thinking long-term, how to attract like-minded people, and one sign of mental toughness",
+      "email_date": "2026-08-27T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/august-27-2026",
+      "idea_index": 1,
+      "kind": "question"
+    },
+    {
       "id": "https://jamesclear.com/3-2-1/august-20-2026#question#1",
       "text": "If the version of you from five years ago could see your life today, what would surprise them most?",
       "author": "James Clear",
@@ -25374,6 +25440,7 @@
     "https://jamesclear.com/3-2-1/august-25-2022",
     "https://jamesclear.com/3-2-1/august-26-2021",
     "https://jamesclear.com/3-2-1/august-27-2020",
+    "https://jamesclear.com/3-2-1/august-27-2026",
     "https://jamesclear.com/3-2-1/august-28-2025",
     "https://jamesclear.com/3-2-1/august-29-2019",
     "https://jamesclear.com/3-2-1/august-29-2024",
