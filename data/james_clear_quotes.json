@@ -1,6 +1,61 @@
 {
-  "updated_at": "2026-09-10T09:03:29.979517+00:00",
+  "updated_at": "2026-09-11T07:24:08.058221+00:00",
   "quotes": [
+    {
+      "id": "https://jamesclear.com/3-2-1/september-10-2026#quote#2",
+      "text": "I had few really definite ideas, and the reason for this was that, instead of obstinately seeking to control circumstances, I obeyed them, and they forced me to change my mind all the time. Thus it happened that most of the time, to tell the truth, I had no definite plans but only projects.",
+      "author": "Napoleon Bonaparte",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What to do when you feel stuck, the art of following up, and how to build something successful",
+      "email_date": "2026-09-10T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/september-10-2026",
+      "idea_index": 2,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/september-10-2026#quote#1",
+      "text": "The value of a company is the sum of all problems solved.",
+      "author": "Martin Lorentzon",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What to do when you feel stuck, the art of following up, and how to build something successful",
+      "email_date": "2026-09-10T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/september-10-2026",
+      "idea_index": 1,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/september-10-2026#idea#3",
+      "text": "The person who complains loudest will get attention, but at the expense of their reputation. And yet, following up is an important life skill. If you want something done and you’d like it done soon, then you need to follow up. The balance is in the delivery. Be pleasant and persistent when things matter to you. Always kind, but don’t let it rest until it’s done and done well.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What to do when you feel stuck, the art of following up, and how to build something successful",
+      "email_date": "2026-09-10T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/september-10-2026",
+      "idea_index": 3,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/september-10-2026#idea#2",
+      "text": "Winning isn’t what makes you feel good. Growth makes you feel good. Sometimes they are the same thing. When you achieve something for the first time, it’s growth. You’ve reached a new level. The win feels satisfying. But when you do it for the tenth time (or the hundredth time), it can feel stale. You’re still winning, but you’re not necessarily growing. The secret is not to worry about winning, but rather to focus on growing. And the most straightforward way to grow is to learn something. If you’re ever feeling stuck, go learn something new. Read, write, think, learn, repeat. When you’re learning, you’re growing.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What to do when you feel stuck, the art of following up, and how to build something successful",
+      "email_date": "2026-09-10T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/september-10-2026",
+      "idea_index": 2,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/september-10-2026#idea#1",
+      "text": "We are all connected. The way you choose to live ripples into the future. Your decisions today can be a blessing or a curse for your descendants. Strive to live in such a way that the world will gain from your time here.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What to do when you feel stuck, the art of following up, and how to build something successful",
+      "email_date": "2026-09-10T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/september-10-2026",
+      "idea_index": 1,
+      "kind": "idea"
+    },
     {
       "id": "https://jamesclear.com/3-2-1/september-3-2026#quote#2",
       "text": "Something I try to remind myself: someone who is writing three hours a day, five days a week… it’s shocking how much you can produce. Add those weeks together, and 40 weeks later, you have a book. The difference between the prolific writer and the self-loathing person who doesn’t write anything is one writes 15 hours a week out of their 112 waking hours a week and the other does zero out of 112 waking hours. So 1/7th versus 0/7ths. 6/7ths of those two people’s lives are the same! People who can’t put something together have this daunting assumption that the prolific writer is fundamentally different, they’re working constantly all the time. It doesn’t have to be that way. It’s consistency.",
@@ -21179,6 +21234,17 @@
   ],
   "questions": [
     {
+      "id": "https://jamesclear.com/3-2-1/september-10-2026#question#1",
+      "text": "Spend less time dreaming and more time experimenting. Doing the real thing will usually teach you more than dreaming about the perfect thing. What is one small way you can try out the real thing (even if only for five minutes or at a smaller scale)?",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What to do when you feel stuck, the art of following up, and how to build something successful",
+      "email_date": "2026-09-10T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/september-10-2026",
+      "idea_index": 1,
+      "kind": "question"
+    },
+    {
       "id": "https://jamesclear.com/3-2-1/september-3-2026#question#1",
       "text": "Rather than thinking about what you want to accomplish or obtain this week, let’s spin it around. What can you accept or let go of this week?",
       "author": "James Clear",
@@ -25795,6 +25861,7 @@
     "https://jamesclear.com/3-2-1/october-9-2025",
     "https://jamesclear.com/3-2-1/september-1-2022",
     "https://jamesclear.com/3-2-1/september-10-2020",
+    "https://jamesclear.com/3-2-1/september-10-2026",
     "https://jamesclear.com/3-2-1/september-11-2025",
     "https://jamesclear.com/3-2-1/september-12-2019",
     "https://jamesclear.com/3-2-1/september-12-2024",
