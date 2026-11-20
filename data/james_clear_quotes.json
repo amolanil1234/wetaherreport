@@ -1,6 +1,61 @@
 {
-  "updated_at": "2026-11-19T13:41:38.841250+00:00",
+  "updated_at": "2026-11-20T10:14:53.030759+00:00",
   "quotes": [
+    {
+      "id": "https://jamesclear.com/3-2-1/november-19-2026#quote#2",
+      "text": "Attention is the beginning of devotion.",
+      "author": "Mary Oliver",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On waiting for happiness, where commitment comes from, and the power of reflection",
+      "email_date": "2026-11-19T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/november-19-2026",
+      "idea_index": 2,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/november-19-2026#quote#1",
+      "text": "What a privilege it is to be tired in the pursuit of a challenge of your own choosing.",
+      "author": "Molly Karagyaurov transforms tiredness",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On waiting for happiness, where commitment comes from, and the power of reflection",
+      "email_date": "2026-11-19T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/november-19-2026",
+      "idea_index": 1,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/november-19-2026#idea#3",
+      "text": "Useful and joyful. Focus on being useful. Make a contribution to others. Do work that is helpful. Focus on being joyful. We only get one ride. Appreciate the beauty of it. There are a million things that can make a good life, but if you’re useful and joyful then you’re a long way home.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On waiting for happiness, where commitment comes from, and the power of reflection",
+      "email_date": "2026-11-19T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/november-19-2026",
+      "idea_index": 3,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/november-19-2026#idea#2",
+      "text": "Reflection is perhaps more important than knowledge. Sometimes knowledge fails. And when it does, you need space to reflect and review so you can integrate your knowledge with your actual life. Reflection helps you apply your knowledge.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On waiting for happiness, where commitment comes from, and the power of reflection",
+      "email_date": "2026-11-19T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/november-19-2026",
+      "idea_index": 2,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/november-19-2026#idea#1",
+      "text": "If you love the daily lifestyle, you can be happy before and after you achieve your goals.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On waiting for happiness, where commitment comes from, and the power of reflection",
+      "email_date": "2026-11-19T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/november-19-2026",
+      "idea_index": 1,
+      "kind": "idea"
+    },
     {
       "id": "https://jamesclear.com/3-2-1/november-12-2026#quote#2",
       "text": "Endeavor to live the life which you have imagined.",
@@ -22664,6 +22719,17 @@
   ],
   "questions": [
     {
+      "id": "https://jamesclear.com/3-2-1/november-19-2026#question#1",
+      "text": "Pick something you’re working on and ask, “What am I actually trying to achieve here?” New paths may reveal themselves.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: On waiting for happiness, where commitment comes from, and the power of reflection",
+      "email_date": "2026-11-19T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/november-19-2026",
+      "idea_index": 1,
+      "kind": "question"
+    },
+    {
       "id": "https://jamesclear.com/3-2-1/november-12-2026#question#1",
       "text": "I met with the crew of NASA’s Artemis II moon mission earlier this week and they told me there was a question they kept returning to during their training and mission: What is the first right thing I can do?",
       "author": "James Clear",
@@ -27542,6 +27608,7 @@
     "https://jamesclear.com/3-2-1/november-17-2022",
     "https://jamesclear.com/3-2-1/november-18-2021",
     "https://jamesclear.com/3-2-1/november-19-2020",
+    "https://jamesclear.com/3-2-1/november-19-2026",
     "https://jamesclear.com/3-2-1/november-2-2023",
     "https://jamesclear.com/3-2-1/november-20-2025",
     "https://jamesclear.com/3-2-1/november-21-2019",
