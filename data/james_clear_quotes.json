@@ -1,6 +1,61 @@
 {
-  "updated_at": "2026-11-26T14:10:31.430115+00:00",
+  "updated_at": "2026-11-27T11:06:01.158717+00:00",
   "quotes": [
+    {
+      "id": "https://jamesclear.com/3-2-1/november-26-2026#quote#2",
+      "text": "Doing the right thing doesn’t guarantee reciprocity, but it does let you sleep in peace.",
+      "author": "Fabi",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What matters more than talent, living to make yourself proud, and the art of receiving",
+      "email_date": "2026-11-26T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/november-26-2026",
+      "idea_index": 2,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/november-26-2026#quote#1",
+      "text": "Talent is insignificant. I know a lot of talented ruins. Beyond talent lie all the usual words: discipline, love, luck, but, most of all, endurance.",
+      "author": "James Baldwin",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What matters more than talent, living to make yourself proud, and the art of receiving",
+      "email_date": "2026-11-26T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/november-26-2026",
+      "idea_index": 1,
+      "kind": "quote"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/november-26-2026#idea#3",
+      "text": "The balance of life: Thinking only of today degrades the experience of tomorrow. Delay gratification. Thinking only of tomorrow degrades the experience of today. Don’t wait to begin living. Which one do you need to emphasize right now?",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What matters more than talent, living to make yourself proud, and the art of receiving",
+      "email_date": "2026-11-26T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/november-26-2026",
+      "idea_index": 3,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/november-26-2026#idea#2",
+      "text": "Your favorite athlete’s first workout was just as bad as yours. Your favorite chef’s first meal was just as bad as yours. Your favorite artist’s first work was just as bad as yours. Keep going.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What matters more than talent, living to make yourself proud, and the art of receiving",
+      "email_date": "2026-11-26T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/november-26-2026",
+      "idea_index": 2,
+      "kind": "idea"
+    },
+    {
+      "id": "https://jamesclear.com/3-2-1/november-26-2026#idea#1",
+      "text": "You are not your grand plans. You are your daily patterns.",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What matters more than talent, living to make yourself proud, and the art of receiving",
+      "email_date": "2026-11-26T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/november-26-2026",
+      "idea_index": 1,
+      "kind": "idea"
+    },
     {
       "id": "https://jamesclear.com/3-2-1/november-19-2026#quote#2",
       "text": "Attention is the beginning of devotion.",
@@ -22719,6 +22774,17 @@
   ],
   "questions": [
     {
+      "id": "https://jamesclear.com/3-2-1/november-26-2026#question#1",
+      "text": "A simple practice from priest and writer Richard Rohr: Take a moment to pause. Stop thinking so much about what you want to accomplish. Relax and ask, “What can I receive today?",
+      "author": "James Clear",
+      "source": "James Clear 3-2-1",
+      "email_subject": "3-2-1: What matters more than talent, living to make yourself proud, and the art of receiving",
+      "email_date": "2026-11-26T12:00:00+00:00",
+      "message_id": "https://jamesclear.com/3-2-1/november-26-2026",
+      "idea_index": 1,
+      "kind": "question"
+    },
+    {
       "id": "https://jamesclear.com/3-2-1/november-19-2026#question#1",
       "text": "Pick something you’re working on and ask, “What am I actually trying to achieve here?” New paths may reveal themselves.",
       "author": "James Clear",
@@ -27617,6 +27683,7 @@
     "https://jamesclear.com/3-2-1/november-24-2022",
     "https://jamesclear.com/3-2-1/november-25-2021",
     "https://jamesclear.com/3-2-1/november-26-2020",
+    "https://jamesclear.com/3-2-1/november-26-2026",
     "https://jamesclear.com/3-2-1/november-27-2025",
     "https://jamesclear.com/3-2-1/november-28-2019",
     "https://jamesclear.com/3-2-1/november-28-2024",
